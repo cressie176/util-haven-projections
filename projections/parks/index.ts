@@ -5,10 +5,10 @@ import { ProjectionType } from "./types";
 
 export default class Parks extends Projection<SourceType, ProjectionType> {
   constructor() {
-    super({ baseDir: __dirname, version: '1.0.0', source: 'parks' });
+    super({ baseDir: __dirname, version: "1.0.0", source: "parks" });
   }
 
-  _build(parks: SourceType[]) : ProjectionType[] {
+  _build(parks: SourceType[]): ProjectionType[] {
     return parks;
   }
 }

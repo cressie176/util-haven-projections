@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dry-run": "ts-node index -- --dry-run"
+    "dry-run": "ts-node index -- --dry-run",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -12,6 +13,12 @@
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/semver": "^7.3.10",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1",
     "ts-node": "^10.8.2"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

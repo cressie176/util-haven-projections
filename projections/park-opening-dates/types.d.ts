@@ -1,17 +1,17 @@
 export type ProjectionType = ParkOpeningDatesType;
 
 type ParkOpeningDatesType = {
-  code: string,
-  openingDates: OpeningDatesType
+  code: string;
+  openingDates: OpeningDatesType;
 };
-  
+
 type OpeningDatesType = {
-  guests: DateRangeType[],
-  owners: DateRangeType[],
-  touring: DateRangeType[]  
+  guests: DateRangeType[];
+  owners: DateRangeType[];
+  touring: DateRangeType[];
 };
-  
+
 type DateRangeType = {
-  from: string,
-  to: string
+  from: string;
+  to: string;
 };
