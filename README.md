@@ -224,7 +224,7 @@ You must add a _completely new_ [yup](https://www.npmjs.com/package/yup) schema 
 
 ## Local Testing
 
-If you want to test modules locally before publishing them the easiest way is to install a private npm registry such as (verdaccio)[https://verdaccio.org/] and temporarily update the `.npmrc` files. Running `npx ts-node index` will publish any modules to the private registry, from where you can install them.
+If you want to test modules locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. Running `npx ts-node index` will publish any modules to the private registry, from where you can install them.
 
 You will need to run `npm login` in order to publish modules to vedaccio
 
