@@ -1,7 +1,4 @@
-import {
-  execSync,
-  ExecSyncOptionsWithStringEncoding,
-} from "node:child_process";
+import { execSync, ExecSyncOptionsWithStringEncoding } from "node:child_process";
 
 type isPublishedOptionsType = {
   scope?: string;
@@ -18,16 +15,8 @@ type linkOptionsType = {
   cwd: string;
 };
 
-export function isPublished({
-  scope,
-  pkg,
-  version,
-}: isPublishedOptionsType): boolean {
-  const artefact = [
-    scope ? `@${scope}` : "",
-    pkg,
-    version ? `@${version}` : "",
-  ].join("");
+export function isPublished({ scope, pkg, version }: isPublishedOptionsType): boolean {
+  const artefact = [scope ? `@${scope}` : "", pkg, version ? `@${version}` : ""].join("");
   try {
     execute(`npm view ${artefact}`);
   } catch (error) {

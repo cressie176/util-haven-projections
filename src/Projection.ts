@@ -70,10 +70,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
 
   private _loadSource(source: string) {
     const sourceDir = path.join(process.cwd(), "sources", source);
-    const sourceFilePattern = new RegExp(
-      `^${source}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z.json$`,
-      "i"
-    );
+    const sourceFilePattern = new RegExp(`^${source}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z.json$`, "i");
     return fs
       .readdirSync(sourceDir)
       .filter((filename) => {
@@ -134,16 +131,11 @@ export default abstract class Projection<SourceType, ProjectionType> {
   }
 
   private _validateData(records: TemporalRecordType[]) {
-    if (this._schemas.length === 0)
-      throw new Error(
-        `Projection ${this._name}@${this._version} has no schema`
-      );
+    if (this._schemas.length === 0) throw new Error(`Projection ${this._name}@${this._version} has no schema`);
 
     this._schemas.forEach(({ version, schema }) => {
       records.forEach((record) => {
-        debug(
-          `Validating data for ${this._name}/${record.effectiveDate} using schema ${version}`
-        );
+        debug(`Validating data for ${this._name}/${record.effectiveDate} using schema ${version}`);
         schema.validateSync(record.data, { strict: true, abortEarly: true });
       });
     });

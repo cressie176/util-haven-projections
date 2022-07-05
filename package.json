@@ -15,7 +15,8 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
-    "ts-node": "^10.8.2"
+    "ts-node": "^10.8.2",
+    "zunit": "^3.2.1"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

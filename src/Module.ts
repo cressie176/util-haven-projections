@@ -41,10 +41,7 @@ export default class Module {
     debug(`Writing module ${this.fqn} to ${this._baseDir}`);
     this._init();
     this._writeVariant("all", records);
-    this._writeVariant(
-      "currentAndFuture",
-      this._getCurrentAndFutureRecords(records)
-    );
+    this._writeVariant("currentAndFuture", this._getCurrentAndFutureRecords(records));
   }
 
   isPublished(): boolean {
@@ -52,9 +49,7 @@ export default class Module {
   }
 
   publish({ dryRun = false }: { dryRun: boolean }) {
-    debug(
-      `Publishing module ${this.fqn} from ${this._baseDir} with dryRun=${dryRun}`
-    );
+    debug(`Publishing module ${this.fqn} from ${this._baseDir} with dryRun=${dryRun}`);
     npm.publish({ cwd: this._baseDir, dryRun });
   }
 
@@ -69,11 +64,7 @@ export default class Module {
     const pkgPath = path.join(this._baseDir, "package.json");
     this._writeJsonSync(pkgPath, pkg);
 
-    fs.writeFileSync(
-      path.join(this._baseDir, `types.d.ts`),
-      this._projection.types,
-      "utf-8"
-    );
+    fs.writeFileSync(path.join(this._baseDir, `types.d.ts`), this._projection.types, "utf-8");
 
     if (fs.existsSync(".npmrc")) {
       fs.copyFileSync(".npmrc", path.join(this._baseDir, ".npmrc"));
@@ -98,10 +89,7 @@ export default class Module {
 
     this._writeJsonSync(variantPath, records);
 
-    const requirePath = `.${path.sep}${path.relative(
-      this._baseDir,
-      variantPath
-    )}`;
+    const requirePath = `.${path.sep}${path.relative(this._baseDir, variantPath)}`;
     const script = [
       `const records = require('${requirePath}');`,
       `module.exports = {`,
@@ -112,22 +100,11 @@ export default class Module {
       `}`,
     ].join("\n");
 
-    fs.writeFileSync(
-      path.join(this._baseDir, `${variantName}.js`),
-      script,
-      "utf-8"
-    );
+    fs.writeFileSync(path.join(this._baseDir, `${variantName}.js`), script, "utf-8");
 
-    const typeDef = [
-      `import { ProjectionType } from './types';`,
-      `export function get(effectiveDate? : Date): ProjectionType[];`,
-    ].join("\n");
+    const typeDef = [`import { ProjectionType } from './types';`, `export function get(effectiveDate? : Date): ProjectionType[];`].join("\n");
 
-    fs.writeFileSync(
-      path.join(this._baseDir, `${variantName}.d.ts`),
-      typeDef,
-      "utf-8"
-    );
+    fs.writeFileSync(path.join(this._baseDir, `${variantName}.d.ts`), typeDef, "utf-8");
   }
 
   private _writeJsonSync(fullPath: string, obj: any) {
