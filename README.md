@@ -2,16 +2,7 @@
 
 ## Contents
 - [The Problem](#the-problem)
-  - [Consistency](#consistency)
-  - [Load Times](#load-times)  
-  - [Reliability](#reliability)
-  - [Stale Data](#stale-data)  
-  - [Temporality](#temporality)  
-  - [Evolution](#evolution)
-  - [Local Testing](#local-testing)  
 - [This Solution](#this-solution)
-  - [Pros](#pros)
-  - [Cons](#cons)  
 - [Usage](#usage)
   - [Adding Data Sources](#adding-data-sources)
   - [Adding Projections](#adding-projections)  
