@@ -29,7 +29,7 @@ Both reference data, and our understanding of our domain evolves over time. We w
 ### Local Testing
 Our applications must be tested locally, and therefore any solution sould work well on an engineering laptop
 
-## The Solution
+## This Solution
 
 The solution adopted by this project is to store source data in a GitHub repository as JSON documents, and to generate a set of projections which are published as npm packages. The projections and packages are semantically versioned, and validated using [yup](https://www.npmjs.com/package/yup) schemas. The packages also include TypeScript definitions.
 
