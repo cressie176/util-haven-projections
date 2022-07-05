@@ -50,7 +50,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
   - Easy add more sources and projections
   - Easy to consume projections (npm install)
   - Reliable (no network dependency)
-  - Tracable via the consumer's package.json files  
+  - Traceable via the consumer's package.json files  
   - Provides an explicit, validated data format
   - Provides "good enough" consistency via future effective dates
   - Provides version management through semver
