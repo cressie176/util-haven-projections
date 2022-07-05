@@ -1,18 +1,19 @@
 # Haven Projections
 
 ## Contents
+
 - [The Problem](#the-problem)
 - [This Solution](#this-solution)
 - [Usage](#usage)
   - [Adding Data Sources](#adding-data-sources)
-  - [Adding Projections](#adding-projections)  
-  - [Updating Data Sources](#updating-data-sources)    
-  - [Updating Projections](#updating-projections)  
+  - [Adding Projections](#adding-projections)
+  - [Updating Data Sources](#updating-data-sources)
+  - [Updating Projections](#updating-projections)
 - [Local Testing](#local-testing-1)
 - [F.A.Q](#faq)
-   - [Why not GraphQL?](#why-not-graphQL)
-   - [Why not REST?](#why-not-rest)   
-   - [Why not a database?](#why-not-a-database)   
+  - [Why not GraphQL?](#why-not-graphQL)
+  - [Why not REST?](#why-not-rest)
+  - [Why not a database?](#why-not-a-database)
 - [TODO](#todo)
 
 ## The Problem
@@ -56,6 +57,20 @@ Our applications must be tested locally, and therefore any solution sould work w
 ## This Solution
 
 The solution adopted by this project is to store source data in a GitHub repository as JSON documents, and to generate a set of projections which are published as npm packages. The projections and packages are semantically versioned, and validated using [yup](https://www.npmjs.com/package/yup) schemas. The packages also include TypeScript definitions.
+
+```
+┌───────────────────────────────────┐         ┌───────────────────────────────────┐         ┌───────────────────────────────────┐         ┌────────────────────────────────────────┐
+│                                   │         │                                   │         │                                   │         │                                        │
+│            Data Source            │         │            Projection             │         │              Package              │         │                Variant                 │
+│                                   │         │                                   │         │                                   │         │                                        │
+│    A time series JSON document    │        ╱│    A specific view of the Data    │         │    An npm package wrapping the    │        ╱│   The package contains two variants.   │
+│                                   │─────────│  Source. Also a time series JSON  │─────────│            projection             │─────────│                                        │
+│                                   │        ╲│             document.             │         │                                   │        ╲│ 1) all [includes all records]          │
+│                                   │         │                                   │         │                                   │         │ 2) current-and-future [excludes        │
+│                                   │         │                                   │         │                                   │         │    historic records]                   │
+│                                   │         │                                   │         │                                   │         │                                        │
+└───────────────────────────────────┘         └───────────────────────────────────┘         └───────────────────────────────────┘         └────────────────────────────────────────┘
+```
 
 The source data must be temporal (i.e. use a time series). To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
 
