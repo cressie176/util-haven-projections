@@ -239,7 +239,7 @@ Whenever you want to update a projection you must update the projection version 
 - Use `minor` when you have made non-breaking changes to the data format
 - Use `major` when you have made breaking changes to the data format
 
-You must add a **completely new** [yup](https://www.npmjs.com/package/yup) schema for both `minor` and `major` releases. Do not edit or reuse existing schemas otherwise you may unwittingly hide breaking changes.
+You must add a **completely new** [yup](https://www.npmjs.com/package/yup) schema for both `minor` and `major` releases. Do not edit or reuse/import existing schemas otherwise you may unwittingly hide breaking changes.
 
 ## Local Testing
 
