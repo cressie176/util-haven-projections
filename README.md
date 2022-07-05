@@ -186,7 +186,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    ```bash
    mkdir projections/park-opening-dates/schemas
    ```
-1. Add a [yup](https://www.npmjs.com/package/yup) schema using the version specified in the projection constructor, e.g. `1.0.0.ts`
+1. Add a [yup](https://www.npmjs.com/package/yup) schema to the schemas directory. The filename (excluding the extension) must match the projection version, e.g. `1.0.0.ts`
 
    ```ts
    import { object, string, array } from "yup";
