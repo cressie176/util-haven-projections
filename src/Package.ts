@@ -5,9 +5,9 @@ import path from "path";
 import { TemporalRecordType } from ".";
 import Projection from "./Projection";
 
-const debug = Debug("haven:projections:Module");
+const debug = Debug("haven:projections:Package");
 
-export default class Module {
+export default class Package {
   private _name: string;
   private _version: string;
   private _baseDir: string;
@@ -17,7 +17,7 @@ export default class Module {
     this._name = `data-${projection.name}`;
     this._version = projection.version;
     this._projection = projection;
-    this._baseDir = path.join(process.cwd(), "modules", this._name);
+    this._baseDir = path.join(process.cwd(), "dist", "packages", this._name);
   }
 
   get name() {
@@ -38,7 +38,7 @@ export default class Module {
   }
 
   private _write(records: TemporalRecordType[]) {
-    debug(`Writing module ${this.fqn} to ${this._baseDir}`);
+    debug(`Writing package ${this.fqn} to ${this._baseDir}`);
     this._init();
     this._writeVariant("all", records);
     this._writeVariant("currentAndFuture", this._getCurrentAndFutureRecords(records));
@@ -49,12 +49,12 @@ export default class Module {
   }
 
   publish({ dryRun = false }: { dryRun: boolean }) {
-    debug(`Publishing module ${this.fqn} from ${this._baseDir} with dryRun=${dryRun}`);
+    debug(`Publishing package ${this.fqn} from ${this._baseDir} with dryRun=${dryRun}`);
     npm.publish({ cwd: this._baseDir, dryRun });
   }
 
   link() {
-    debug(`Linking module ${this.fqn} from ${this._baseDir}`);
+    debug(`Linking package ${this.fqn} from ${this._baseDir}`);
     npm.publish({ cwd: this._baseDir, dryRun: true });
   }
 

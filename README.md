@@ -89,6 +89,7 @@ Our applications must be tested locally, and therefore any solution sould work w
                   │                                   │           │                                   │
                   └───────────────────────────────────┘           └───────────────────────────────────┘
 ```
+
 The solution adopted by this project is to store source data in a GitHub repository as time seried JSON documents, and to generate a set of projections which are published as npm packages. The projections and packages are semantically versioned, and validated using [yup](https://www.npmjs.com/package/yup) schemas. The packages also include the projection's TypeScript definitions. To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
 
 ### Pros
@@ -250,7 +251,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    export default array().required().min(1).of(ParkOpeningDatesSchema);
    ```
 
-1. Dry run the publish and check the output in the `modules` folder
+1. Dry run the publish and check the output in the `dist/packages` folder
    ```sh
    DEBUG=haven:* npm run publish:dry-run
    ```
@@ -261,7 +262,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
 
 ### Updating Data Sources
 
-It is safe to make non-breaking changes data sources, but you will need to bump the version for any dependent projections by updating their constructors before the updated module will be published. If you need to make a breaking change to a Data Source it is likely that one or more dependent projections will fail validation, and you will have to update the projection's `_build` method to make it backwards compatible, or if this is not possible release a new major version of the projection (see [Updating Projections](#updating-projections).
+It is safe to make non-breaking changes data sources, but you will need to bump the version for any dependent projections by updating their constructors before the updated package will be published. If you need to make a breaking change to a Data Source it is likely that one or more dependent projections will fail validation, and you will have to update the projection's `_build` method to make it backwards compatible, or if this is not possible release a new major version of the projection (see [Updating Projections](#updating-projections).
 
 ### Updating Projections
 
@@ -275,9 +276,9 @@ You must add a **completely new** [yup](https://www.npmjs.com/package/yup) schem
 
 ## Local Testing
 
-If you want to test modules locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. After which you can run `npm run publish` to publish any modules to the private registry, from where you can install them.
+If you want to test packages locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. After which you can run `npm run publish` to publish any packages to the private registry, from where you can install them.
 
-You will need to run `npm login` in order to publish modules to vedaccio
+You will need to run `npm login` in order to publish packages to vedaccio
 
 ## F.A.Q.
 
@@ -298,5 +299,5 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 - Support package scopes
 - Check there is an up-to-date schema
 - Validate package name
-- A github action to publish modules
+- A github action to publish packages
 - Prevent large projections (and allow an override)
