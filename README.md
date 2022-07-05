@@ -236,7 +236,7 @@ Because it would have been a nightmare to manage breaking data format changes
 
 ### Why didn't we use REST
 
-We did. A [sister project](github.com/havenEngineering/service-haven-projections) exposes the projections via a RESTful API.
+We did. A [sister project](github.com/cressie176/service-haven-projections) exposes the projections via a RESTful API.
 
 ### Why didn't we store the source data in a database
 
