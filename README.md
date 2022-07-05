@@ -9,10 +9,10 @@
   - [Updating Data Sources](#updating-data-sources)    
   - [Updating Projections](#updating-projections)  
 - [Local Testing](#local-testing-1)
-- [F.A.Q](#f-a-q)
-   - [Why not GraphQL?](why-not-graphQL-)
-   - [Why not REST?](why-not-rest-)   
-   - [Why not a database?](why-not-a-database-)   
+- [F.A.Q](#faq)
+   - [Why not GraphQL?](why-not-graphQL)
+   - [Why not REST?](why-not-rest)   
+   - [Why not a database?](why-not-a-database)   
 - [TODO](#todo)
 
 ## The Problem
