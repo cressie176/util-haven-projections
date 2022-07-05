@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dry-run": "ts-node index -- --dry-run",
+    "publish:dry-run": "ts-node index -- --dry-run",
+    "publish": "ts-node index",
     "prepare": "husky install"
   },
   "dependencies": {
