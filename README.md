@@ -70,6 +70,26 @@ The solution adopted by this project is to store source data in a GitHub reposit
 │                                   │         │                                   │         │                                   │         │    historic records]                   │
 │                                   │         │                                   │         │                                   │         │                                        │
 └───────────────────────────────────┘         └───────────────────────────────────┘         └───────────────────────────────────┘         └────────────────────────────────────────┘
+                  │                                   │                    │
+                  │                                   │                    │
+                  │                                   │                    │
+                  │                                   │                    │
+                  └───────┐                   ┌───────┘                    └────────┐
+                          │                   │                                     │
+                          │                   │                                     │
+                          │                   │                                     │
+                          │                   │                                    ╱│╲
+                  ┌───────────────────────────────────┐           ┌───────────────────────────────────┐
+                  │                                   │           │                                   │
+                  │         Type Definitions          │           │              Schema               │
+                  │                                   │           │                                   │
+                  │     Both the Data Source and      │           │     A projection must have an     │
+                  │ Projections require a set of type │           │ accompanying yup schemas for each │
+                  │            definitions            │           │     major and minor release.      │
+                  │                                   │           │                                   │
+                  │                                   │           │                                   │
+                  │                                   │           │                                   │
+                  └───────────────────────────────────┘           └───────────────────────────────────┘
 ```
 
 The source data must be temporal (i.e. use a time series). To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
