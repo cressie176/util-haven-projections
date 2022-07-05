@@ -229,7 +229,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
 
 ### Updating Data Sources
 
-It is safe to make non-breaking changes data sources, but you will need to bump the version for any dependent projections by updating their constructors before the updated module will be published. If you need to make a breaking change to a Data Source it is likely that one or more dependent projections will fail validation, and you will have to update the projection's `_build` method to make it backwards compatible, or if this is not possible release a new major version of the projection that is not backwards compatible.
+It is safe to make non-breaking changes data sources, but you will need to bump the version for any dependent projections by updating their constructors before the updated module will be published. If you need to make a breaking change to a Data Source it is likely that one or more dependent projections will fail validation, and you will have to update the projection's `_build` method to make it backwards compatible, or if this is not possible release a new major version of the projection (see [Updating Projections](#updating-projections).
 
 ### Updating Projections
 
