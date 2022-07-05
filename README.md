@@ -267,3 +267,4 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 - Check there is an up-to-date schema
 - Validate package name
 - A github action to publish modules
+- Prevent large projections (and allow an override)
