@@ -5,7 +5,7 @@ import path from "path";
 import { TemporalRecordType } from ".";
 import Projection from "./Projection";
 
-const debug = Debug("haven:Module");
+const debug = Debug("haven:projections:Module");
 
 export default class Module {
   private _name: string;

@@ -5,7 +5,7 @@ import semver from "semver";
 import { object, date, array, AnySchema } from "yup";
 import { TemporalRecordType } from ".";
 
-const debug = Debug("haven:Projection");
+const debug = Debug("haven:projections:Projection");
 
 const ENVELOPE_SCHEMA = array()
   .min(1)
