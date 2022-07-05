@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "dry-run": "ts-node index -- --dry-run"
+  },
+  "private": true,
+  "dependencies": {
+    "debug": "^4.3.4",
+    "npm": "^7.24.2",
+    "semver": "^7.3.7",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/semver": "^7.3.10",
+    "ts-node": "^10.8.2"
+  }
+}
