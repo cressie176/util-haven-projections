@@ -93,7 +93,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
 ### Adding Data Sources
 
 1. Create a folder within `sources`, e.g.
-   ```bash
+   ```sh
    mkdir sources/parks
    ```
 1. Add the data files to the folder, one per effective date. Use the naming convention `${source}-${timestamp}.json`. The format of the file must match the following:
@@ -137,7 +137,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
 ### Adding Projections
 
 1. Create a folder within `projections`. The name must confirm to [npm's package name rules](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#name). e.g.
-   ```bash
+   ```sh
    mkdir projections/park-opening-dates
    ```
 1. Add TypeScript definitions in `types.d.ts`, You **must** export a type called `ProjectionType` e.g.
@@ -183,7 +183,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    ```
 
 1. Create a subfolder called `schemas` for the yup schemas. e.g.
-   ```bash
+   ```sh
    mkdir projections/park-opening-dates/schemas
    ```
 1. Add a [yup](https://www.npmjs.com/package/yup) schema to the schemas directory. The filename (excluding the extension) must match the projection version, e.g. `1.0.0.ts`
@@ -218,11 +218,14 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    export default array().required().min(1).of(ParkOpeningDatesSchema);
    ```
 
-1. Dry run the projections build and check the output in the `modules` folder
-   ```bash
-   DEBUG=haven:* npm run dry-run
+1. Dry run the publish and check the output in the `modules` folder
+   ```sh
+   DEBUG=haven:* npm run publish:dry-run
    ```
-1. Push your changes. The build will automatically publish new projections to the registry specified in the projects `.npmrc` file.
+1. When you are happy with the projections, publish for them for real.
+   ```sh
+   DEBUG=haven:* npm run publish
+   ```
 
 ### Updating Data Sources
 
