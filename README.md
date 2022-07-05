@@ -1,5 +1,31 @@
 # Haven Projections
 
+## Contents
+- [The Problem](#the-problem)
+  - [Consistency](#consistency)
+  - [Load Times](#load-times)  
+  - [Reliability](#reliability)
+  - [Stale Data](#stale-data)  
+  - [Temporality](#temporality)  
+  - [Evolution](#evolution)
+  - [Local Testing](#local-testing)  
+- [This Solution](#this-solution)
+  - [Pros](#pros)
+  - [Cons](#cons)  
+- [Usage](#usage)
+  - [Adding Data Sources](#adding-data-sources)
+  - [Adding Projections](#adding-projections)  
+  - [Adding Data Sources](#adding-data-sources)    
+  - [Updating Projections](#updating-projections)  
+- [Local Testing](#local-testing)
+- [F.A.Q](#f-a-q)
+   - [Why not GraphQL?](why-not-graphQL-)
+   - [Why not REST?](why-not-rest-)   
+   - [Why not a database?](why-not-a-database-)   
+- [TODO](#todo)
+
+## The Problem
+
 Haven has some common, slow moving, discete, reference data such as park addresses, opening times and other attributes such as whether they are dog friendly, etc. This reference data is needed by multiple clients with different usage characteristics. e.g.
 
 - The search ingester needs the park location and characteristics at ingestion time to create facetted and location based indexes in Elasticsearch
@@ -66,10 +92,12 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
 - Reference data can be used in tests
 - Can be extended for non Node.js applications
 
-#### Cons
+### Cons
 
 - Updates must be made manually by engineers for each consumer
 - Effective dates are only practical at root document level
+
+## Usage
 
 ### Adding Data Sources
 
@@ -227,19 +255,19 @@ You will need to run `npm login` in order to publish modules to vedaccio
 
 ## F.A.Q.
 
-### Why didn't we use GraphQL
+### Why not GraphQL?
 
 Because it would have been a nightmare to manage breaking data format changes
 
-### Why didn't we use REST
+### Why not REST?
 
 We did. A [sister project](https://github.com/cressie176/service-haven-projections) exposes the projections via a RESTful API.
 
-### Why didn't we store the source data in a database
+### Why not a database?
 
 We wanted a low barrier to entry. If the approach proves useful and managing the reference data becomes a pain, we still might.
 
-### TODO
+## TODO
 
 - Support package scopes
 - Check there is an up-to-date schema
