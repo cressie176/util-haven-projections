@@ -266,4 +266,4 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 - Support package scopes
 - Check there is an up-to-date schema
 - Validate package name
-- TODO github action to publish modules
+- A github action to publish modules
