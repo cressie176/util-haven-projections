@@ -6,7 +6,7 @@
 - [Usage](#usage)
   - [Adding Data Sources](#adding-data-sources)
   - [Adding Projections](#adding-projections)  
-  - [Updating Data Sources](#adding-data-sources)    
+  - [Updating Data Sources](#updating-data-sources)    
   - [Updating Projections](#updating-projections)  
 - [Local Testing](#local-testing)
 - [F.A.Q](#f-a-q)
