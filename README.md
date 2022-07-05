@@ -96,7 +96,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    ```bash
    mkdir sources/parks
    ```
-1. Add the data files to the folder, one per effective date. Use the naming convention `${source}-${timestamp}.json`. The format of the file must match
+1. Add the data files to the folder, one per effective date. Use the naming convention `${source}-${timestamp}.json`. The format of the file must match the following:
    ```json
    {
      "effectiveDate": "2020-12-01T00:00:00Z",
