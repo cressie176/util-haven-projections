@@ -73,8 +73,8 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
     {
       "effectiveDate": "2020-12-01T00:00:00Z",
       "data": [
-        { },
-        { }
+        { "name": "Devon Cliffs", "code": "DC" },
+        { "name": "Seashore", "code": "SX" }
       ]
     }
     ```
