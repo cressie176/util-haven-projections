@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import semver from "semver";
 import { object, date, array, AnySchema } from "yup";
-import * as npm from "./npm";
+import { TemporalRecordType } from ".";
 
 const debug = Debug("haven:Projection");
 
@@ -24,18 +24,6 @@ export type ProjectionOptionsType = {
   source: string;
 };
 
-export type TemporalProjectionType = {
-  name: string;
-  version: string;
-  types: string;
-  records: TemporalRecordType[];
-};
-
-export type TemporalRecordType = {
-  effectiveDate: Date;
-  data: Array<any>;
-};
-
 type SchemasEntryType = { version: string; schema: AnySchema };
 
 export default abstract class Projection<SourceType, ProjectionType> {
@@ -44,7 +32,6 @@ export default abstract class Projection<SourceType, ProjectionType> {
   private _version: string;
   private _source: TemporalRecordType[];
   private _schemas: SchemasEntryType[];
-  private _records: TemporalRecordType[];
   private _types: string;
 
   constructor({ baseDir, version, source }: ProjectionOptionsType) {
@@ -56,24 +43,27 @@ export default abstract class Projection<SourceType, ProjectionType> {
     this._types = this._loadTypes();
   }
 
-  isPublished(): boolean {
-    return npm.isPublished({ pkg: this._name, version: this._version });
+  get name() {
+    return this._name;
   }
 
-  generate(): TemporalProjectionType {
+  get version() {
+    return this._version;
+  }
+
+  get types() {
+    return this._types;
+  }
+
+  generate(): TemporalRecordType[] {
     debug(`Generating projection: ${this._name}@${this._version}`);
-    this._records = this._source.map(({ effectiveDate, data }) => {
+    const records = this._source.map(({ effectiveDate, data }) => {
       return { effectiveDate, data: this._build(data) };
     });
 
-    this._validate();
+    this._validate(records);
 
-    return {
-      name: this._name,
-      version: this._version,
-      types: this._types,
-      records: this._records,
-    };
+    return records;
   }
 
   abstract _build(source: SourceType[]): ProjectionType[];
@@ -133,24 +123,24 @@ export default abstract class Projection<SourceType, ProjectionType> {
     return `0.0.0 - ${this._version}`;
   }
 
-  private _validate() {
+  private _validate(records: TemporalRecordType[]) {
     debug(`Validating projection: ${this._name}@${this._version}`);
-    this._validateEnvelope();
-    this._validateData();
+    this._validateEnvelope(records);
+    this._validateData(records);
   }
 
-  private _validateEnvelope() {
-    ENVELOPE_SCHEMA.validateSync(this._records);
+  private _validateEnvelope(records: TemporalRecordType[]) {
+    ENVELOPE_SCHEMA.validateSync(records);
   }
 
-  private _validateData() {
+  private _validateData(records: TemporalRecordType[]) {
     if (this._schemas.length === 0)
       throw new Error(
         `Projection ${this._name}@${this._version} has no schema`
       );
 
     this._schemas.forEach(({ version, schema }) => {
-      this._records.forEach((record) => {
+      records.forEach((record) => {
         debug(
           `Validating data for ${this._name}/${record.effectiveDate} using schema ${version}`
         );

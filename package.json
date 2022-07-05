@@ -3,7 +3,6 @@
     "dry-run": "ts-node index -- --dry-run",
     "prepare": "husky install"
   },
-  "private": true,
   "dependencies": {
     "debug": "^4.3.4",
     "npm": "^7.24.2",

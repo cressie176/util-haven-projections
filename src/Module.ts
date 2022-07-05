@@ -2,62 +2,87 @@ import Debug from "debug";
 import * as npm from "./npm";
 import fs from "fs";
 import path from "path";
-import { TemporalProjectionType, TemporalRecordType } from "./Projection";
+import { TemporalRecordType } from ".";
+import Projection from "./Projection";
 
 const debug = Debug("haven:Module");
 
 export default class Module {
   private _name: string;
   private _version: string;
-  private _types: string;
-  private _records: TemporalRecordType[];
-
   private _baseDir: string;
-  constructor(projection: TemporalProjectionType) {
-    this._name = projection.name;
+  private _projection: any;
+
+  constructor(projection: Projection<any, any>) {
+    this._name = `data-${projection.name}`;
     this._version = projection.version;
-    this._records = projection.records;
-    this._types = projection.types;
+    this._projection = projection;
     this._baseDir = path.join(process.cwd(), "modules", this._name);
   }
 
-  write() {
-    debug(`Writing module ${this._name}@${this._version} to ${this._baseDir}`);
+  get name() {
+    return this._name;
+  }
+
+  get version() {
+    return this._version;
+  }
+
+  get fqn() {
+    return `${this._name}@${this.version}`;
+  }
+
+  generate() {
+    const records = this._projection.generate();
+    this._write(records);
+  }
+
+  private _write(records: TemporalRecordType[]) {
+    debug(`Writing module ${this.fqn} to ${this._baseDir}`);
     this._init();
-    this._writeVariant("all", this._records);
-    this._writeVariant("currentAndFuture", this._getCurrentAndFutureRecords());
+    this._writeVariant("all", records);
+    this._writeVariant(
+      "currentAndFuture",
+      this._getCurrentAndFutureRecords(records)
+    );
+  }
+
+  isPublished(): boolean {
+    return npm.isPublished({ pkg: this._name, version: this._version });
   }
 
   publish({ dryRun = false }: { dryRun: boolean }) {
     debug(
-      `Publishing module ${this._name}@${this._version} from ${this._baseDir} with dryRun=${dryRun}`
+      `Publishing module ${this.fqn} from ${this._baseDir} with dryRun=${dryRun}`
     );
     npm.publish({ cwd: this._baseDir, dryRun });
   }
 
   link() {
-    debug(
-      `Linking module ${this._name}@${this._version} from ${this._baseDir}`
-    );
+    debug(`Linking module ${this.fqn} from ${this._baseDir}`);
     npm.publish({ cwd: this._baseDir, dryRun: true });
   }
 
-  _init() {
+  private _init() {
     fs.mkdirSync(path.join(this._baseDir, "data"), { recursive: true });
-    const pkg = { name: this._name, version: this._version, private: true };
+    const pkg = { name: this._name, version: this._version };
     const pkgPath = path.join(this._baseDir, "package.json");
     this._writeJsonSync(pkgPath, pkg);
 
     fs.writeFileSync(
       path.join(this._baseDir, `types.d.ts`),
-      this._types,
+      this._projection.types,
       "utf-8"
     );
+
+    if (fs.existsSync(".npmrc")) {
+      fs.copyFileSync(".npmrc", path.join(this._baseDir, ".npmrc"));
+    }
   }
 
-  _getCurrentAndFutureRecords() {
+  private _getCurrentAndFutureRecords(records: TemporalRecordType[]) {
     const now = new Date();
-    const startDate = this._records
+    const startDate = records
       .map(({ effectiveDate }) => effectiveDate)
       .reduce((winner, candidate) => {
         if (!winner) return candidate;
@@ -65,12 +90,10 @@ export default class Module {
         if (candidate < winner && candidate >= now) return candidate;
         return winner;
       });
-    return this._records.filter(
-      ({ effectiveDate }) => effectiveDate >= startDate
-    );
+    return records.filter(({ effectiveDate }) => effectiveDate >= startDate);
   }
 
-  _writeVariant(variantName: string, records: TemporalRecordType[]) {
+  private _writeVariant(variantName: string, records: TemporalRecordType[]) {
     const variantPath = path.join(this._baseDir, "data", `${variantName}.json`);
 
     this._writeJsonSync(variantPath, records);
@@ -107,7 +130,7 @@ export default class Module {
     );
   }
 
-  _writeJsonSync(fullPath: string, obj: any) {
+  private _writeJsonSync(fullPath: string, obj: any) {
     const contents = JSON.stringify(obj, null, 2);
     fs.writeFileSync(fullPath, contents, "utf-8");
   }

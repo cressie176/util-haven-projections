@@ -43,7 +43,7 @@ The solution adopted by this project is to store source data in a GitHub reposit
 The source data must be temporary (i.e. include effective dates). To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
 
 ```ts
-import parkOpeningDatesProjection from "@havenEngineering/park-opening-dates/current-and-future";
+import parkOpeningDatesProjection from "@havenEngineering/data-park-opening-dates/current-and-future";
 
 // Gets the current park opening dates
 const parkOpeningDates = parkOpeningDatesProjection.get();
@@ -206,7 +206,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    ```bash
    DEBUG=haven:* npm run dry-run
    ```
-1. Push your changes. The build will automatically publish new projections
+1. Push your changes. The build will automatically publish new projections to the registry specified in the projects `.npmrc` file.
 
 ### Updating Data Sources
 
@@ -221,6 +221,12 @@ Whenever you want to update a projection you must update the projection version 
 - Use `major` when you have made breaking changes to the data format
 
 You must add a _completely new_ [yup](https://www.npmjs.com/package/yup) schema for both `minor` and `major` releases. Do not edit or reuse existing schemas otherwise you may unwittingly hide breaking changes.
+
+## Local Testing
+
+If you want to test modules locally before publishing them the easiest way is to install a private npm registry such as (verdaccio)[https://verdaccio.org/] and temporarily update the `.npmrc` files. Running `npx ts-node index` will publish any modules to the private registry, from where you can install them.
+
+You will need to run `npm login` in order to publish modules to vedaccio
 
 ## F.A.Q.
 
@@ -240,3 +246,4 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 
 - Check there is an up-to-date schema
 - Validate package name
+- TODO github action to publish modules
