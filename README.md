@@ -162,7 +162,7 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    };
    ```
 
-1. Create a new projection class by extending the Projection class and implementing the \_build method. Set the base directory, version and source in the constructor. e.g.
+1. Create a new projection by extending the Projection class and implementing the \_build method. Set the base directory, version and source in the constructor. e.g.
 
    ```ts
    import Projection from "../../src/Projection";
