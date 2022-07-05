@@ -2,7 +2,7 @@ import Debug from "debug";
 import path from "path";
 import fs from "fs";
 import semver from "semver";
-import { object, date, array, mixed } from "yup";
+import { object, date, array, AnySchema } from "yup";
 import * as npm from "./npm";
 
 const debug = Debug("haven:Projection");
@@ -33,16 +33,18 @@ export type TemporalProjectionType = {
 
 export type TemporalRecordType = {
   effectiveDate: Date;
-  data: any;
+  data: Array<any>;
 };
+
+type SchemasEntryType = { version: string; schema: AnySchema };
 
 export default abstract class Projection<SourceType, ProjectionType> {
   private _name: string;
   private _baseDir: string;
   private _version: string;
-  private _source: any[];
-  private _schemas: { version: string; schema: any }[];
-  private _records: { effectiveDate: any; data: any }[];
+  private _source: TemporalRecordType[];
+  private _schemas: SchemasEntryType[];
+  private _records: TemporalRecordType[];
   private _types: string;
 
   constructor({ baseDir, version, source }: ProjectionOptionsType) {
@@ -101,7 +103,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
       });
   }
 
-  private _loadSchemas(): any {
+  private _loadSchemas(): SchemasEntryType[] {
     const versionRange = this._getCompatibleSchemaVersionRange();
     const schemaDir = path.join(this._baseDir, "schemas");
     return fs
