@@ -102,9 +102,9 @@ The solution adopted by this project is to store source data in a GitHub reposit
 - Provides an explicit, validated data format
 - Provides "good enough" consistency via future effective dates
 - Provides version management through semver
-- Discourages large refdata sets
+- Discourages accidental bundling of large data sets
 - Reference data can be used in tests
-- Can be extended for non Node.js applications
+- Can be extended for non Node.js consumers
 
 ### Cons
 
