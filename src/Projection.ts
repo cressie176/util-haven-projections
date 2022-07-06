@@ -1,9 +1,8 @@
 import Debug from "debug";
-import path from "path";
-import fs from "fs";
 import semver from "semver";
-import { object, date, array, AnySchema } from "yup";
-import { TemporalRecordType } from ".";
+import { object, date, array } from "yup";
+import { TemporalRecordType, SchemasEntryType } from ".";
+import FileSystem from "./FileSystem";
 
 const debug = Debug("haven:projections:Projection");
 
@@ -19,28 +18,25 @@ const ENVELOPE_SCHEMA = array()
   );
 
 export type ProjectionOptionsType = {
-  baseDir: string;
+  name: string;
   version: string;
   source: string;
+  fileSystem?: FileSystem;
 };
-
-type SchemasEntryType = { version: string; schema: AnySchema };
 
 export default abstract class Projection<SourceType, ProjectionType> {
   private _name: string;
-  private _baseDir: string;
   private _version: string;
   private _source: TemporalRecordType[];
   private _schemas: SchemasEntryType[];
   private _types: string;
 
-  constructor({ baseDir, version, source }: ProjectionOptionsType) {
-    this._name = path.basename(baseDir);
-    this._baseDir = baseDir;
+  constructor({ name, version, source, fileSystem = new FileSystem() }: ProjectionOptionsType) {
+    this._name = name;
     this._version = version;
-    this._source = this._loadSource(source);
-    this._schemas = this._loadSchemas();
-    this._types = this._loadTypes();
+    this._source = fileSystem.loadDataSource(source);
+    this._schemas = fileSystem.loadSchemas(this._name, this._getCompatibleSchemaVersionRange());
+    this._types = fileSystem.loadTypeDefinitions(this._name);
   }
 
   get name() {
@@ -67,51 +63,6 @@ export default abstract class Projection<SourceType, ProjectionType> {
   }
 
   abstract _build(source: SourceType[]): ProjectionType[];
-
-  private _loadSource(source: string) {
-    const sourceDir = path.join(process.cwd(), "sources", source);
-    const sourceFilePattern = new RegExp(`^${source}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z.json$`, "i");
-    return fs
-      .readdirSync(sourceDir)
-      .filter((filename) => {
-        return sourceFilePattern.test(filename);
-      })
-      .map((filename) => {
-        const fullPath = path.join(sourceDir, filename);
-        const contents = fs.readFileSync(fullPath, "utf-8");
-        const temporalData = JSON.parse(contents);
-        return {
-          ...temporalData,
-          effectiveDate: new Date(temporalData.effectiveDate),
-        };
-      })
-      .sort((a, b) => {
-        return b.effectiveDate - a.effectiveDate;
-      });
-  }
-
-  private _loadSchemas(): SchemasEntryType[] {
-    const versionRange = this._getCompatibleSchemaVersionRange();
-    const schemaDir = path.join(this._baseDir, "schemas");
-    return fs
-      .readdirSync(schemaDir)
-      .map((filename) => {
-        return path.basename(filename, path.extname(filename));
-      })
-      .filter((version) => {
-        return semver.satisfies(version, versionRange);
-      })
-      .map((version) => {
-        const fullPath = path.join(schemaDir, version);
-        const { default: schema } = require(fullPath);
-        return { version, schema };
-      });
-  }
-
-  private _loadTypes(): string {
-    const typesPath = path.join(this._baseDir, "index.d.ts");
-    return fs.readFileSync(typesPath, "utf-8");
-  }
 
   private _getCompatibleSchemaVersionRange() {
     const { major, minor } = semver.parse(this._version);
