@@ -1,4 +1,4 @@
-import { strictEqual as eq, deepStrictEqual as deq } from "assert";
+import { strictEqual as eq, deepStrictEqual as deq, throws } from "assert";
 import { describe, it } from "zunit";
 import { object, array, string } from "yup";
 import FileSystem from "../src/FileSystem";
@@ -8,7 +8,7 @@ import { TemporalRecordType, SchemasEntryType } from "../src";
 export default describe("Projection", () => {
   it("should generate temporal records", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, SCHEMAS, TYPES);
-    const projection = new TestProjection(fileSystem);
+    const projection = new TestProjection({ fileSystem });
     const records = projection.generate();
     eq(records.length, 2);
     eq(records[0].data.length, 2);
@@ -18,11 +18,204 @@ export default describe("Projection", () => {
     eq(records[1].data[0].fullName, "Marrion Robbert Morrison");
     eq(records[1].data[1].fullName, "John Paul Sartre");
   });
+
+  it("should validate projections@major using matching schema version", () => {
+    const schemas = [
+      {
+        version: "1.0.0",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should validate projections@major using compatible patch schema", () => {
+    const schemas = [
+      {
+        version: "1.0.1",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should validate projections@major using compatible minor schema", () => {
+    const schemas = [
+      {
+        version: "1.1.0",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should validate projections@minor using matching schema version", () => {
+    const schemas = [
+      {
+        version: "0.1.0",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.1.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should validate projections@minor using compatible patch schema", () => {
+    const schemas = [
+      {
+        version: "0.1.1",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.1.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should validate projections@patch using matching schema version", () => {
+    const schemas = [
+      {
+        version: "0.0.1",
+        schema: array().test(() => false),
+      },
+    ];
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.0.1", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err) => {
+        eq(err.constructor.name, "ValidationError");
+        return true;
+      }
+    );
+  });
+
+  it("should ignore incompatible schemas for projections@major", () => {
+    const schemas = [
+      {
+        version: "2.0.0",
+        schema: array(),
+      },
+      {
+        version: "1.0.0",
+        schema: array().test(() => false),
+      },
+      {
+        version: "3.0.0",
+        schema: array().test(() => false),
+      },
+    ];
+
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "2.0.0", fileSystem });
+
+    projection.generate();
+  });
+
+  it("should ignore incompatible schemas for projections@minor", () => {
+    const schemas = [
+      {
+        version: "0.2.0",
+        schema: array(),
+      },
+      {
+        version: "0.3.0",
+        schema: array().test(() => false),
+      },
+      {
+        version: "0.1.0",
+        schema: array().test(() => false),
+      },
+      {
+        version: "0.0.1",
+        schema: array().test(() => false),
+      },
+      {
+        version: "1.2.0",
+        schema: array().test(() => false),
+      },
+    ];
+
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.2.0", fileSystem });
+
+    projection.generate();
+  });
+
+  it("should ignore incompatible schemas for projections@patch", () => {
+    const schemas = [
+      {
+        version: "0.0.2",
+        schema: array(),
+      },
+      {
+        version: "0.0.3",
+        schema: array().test(() => false),
+      },
+      {
+        version: "0.0.1",
+        schema: array().test(() => false),
+      },
+    ];
+
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.0.2", fileSystem });
+
+    projection.generate();
+  });
 });
 
+type TestProjectionOptionsType = {
+  version?: string;
+  fileSystem: FileSystem;
+};
+
 class TestProjection extends Projection<SourceType, ProjectionType> {
-  constructor(fileSystem: FileSystem) {
-    super({ name: "staff-full-names", version: "1.0.0", source: "staff", fileSystem });
+  constructor({ version = "1.0.0", fileSystem }: TestProjectionOptionsType) {
+    super({ name: "staff-full-names", version, source: "staff", fileSystem });
   }
   _build(people: SourceType[]): ProjectionType[] {
     return people.map((person) => {
@@ -54,7 +247,7 @@ class StubFileSystem implements FileSystem {
   loadDataSource(source: string): TemporalRecordType[] {
     return this._data;
   }
-  loadSchemas(projection: string, versions: string): SchemasEntryType[] {
+  loadSchemas(projection: string): SchemasEntryType[] {
     return this._schemas;
   }
   loadTypeDefinitions(projection: string): string {

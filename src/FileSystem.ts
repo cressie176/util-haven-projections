@@ -1,14 +1,13 @@
 import Debug from "debug";
 import fs from "fs";
 import path from "path";
-import semver from "semver";
 import { TemporalRecordType, SchemasEntryType } from ".";
 
 const debug = Debug("haven:projections:FileSystem");
 
 export type FileSystemType = {
   loadDataSource(source: string): TemporalRecordType[];
-  loadSchemas(projection: string, versions: string): SchemasEntryType[];
+  loadSchemas(projection: string): SchemasEntryType[];
   loadTypeDefinitions(projection: string): string;
 };
 
@@ -37,16 +36,13 @@ export default class FileSystem implements FileSystemType {
       });
   }
 
-  loadSchemas(projection: string, versions: string): SchemasEntryType[] {
+  loadSchemas(projection: string): SchemasEntryType[] {
     const schemasDir = projectionDir(projection, "schemas");
     debug(`Loading schemas from: ${schemasDir}`);
     return fs
       .readdirSync(schemasDir)
       .map((filename) => {
         return path.basename(filename, path.extname(filename));
-      })
-      .filter((version) => {
-        return semver.satisfies(version, versions);
       })
       .map((version) => {
         const fullPath = path.join(schemasDir, version);

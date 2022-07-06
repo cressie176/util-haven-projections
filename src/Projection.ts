@@ -35,7 +35,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
     this._name = name;
     this._version = version;
     this._source = fileSystem.loadDataSource(source);
-    this._schemas = fileSystem.loadSchemas(this._name, this._getCompatibleSchemaVersionRange());
+    this._schemas = fileSystem.loadSchemas(this._name);
     this._types = fileSystem.loadTypeDefinitions(this._name);
   }
 
@@ -66,9 +66,9 @@ export default abstract class Projection<SourceType, ProjectionType> {
 
   private _getCompatibleSchemaVersionRange() {
     const { major, minor } = semver.parse(this._version);
-    if (major > 0) return `${major}.0.0 - ${this._version}`;
-    if (minor > 0) return `0.${minor}.0 - ${this._version}`;
-    return `0.0.0 - ${this._version}`;
+    if (major > 0) return `${major}.x`;
+    if (minor > 0) return `0.${minor}.x`;
+    return this._version;
   }
 
   private _validate(records: TemporalRecordType[]) {
@@ -82,13 +82,23 @@ export default abstract class Projection<SourceType, ProjectionType> {
   }
 
   private _validateData(records: TemporalRecordType[]) {
-    if (this._schemas.length === 0) throw new Error(`Projection ${this._name}@${this._version} has no schema`);
+    const schemas = this._getCompatibleSchemas();
+    if (schemas.length === 0) throw new Error(`Projection ${this._name}@${this._version} has no compatible schema`);
 
-    this._schemas.forEach(({ version, schema }) => {
+    schemas.forEach(({ version, schema }) => {
       records.forEach((record) => {
         debug(`Validating data for ${this._name}/${record.effectiveDate} using schema ${version}`);
         schema.validateSync(record.data, { strict: true, abortEarly: true });
       });
+    });
+  }
+
+  private _getCompatibleSchemas() {
+    const range = this._getCompatibleSchemaVersionRange();
+    return this._schemas.filter(({ version }) => {
+      const compatible = semver.satisfies(version, range);
+      if (!compatible) debug(`Ignoring schema ${version} as it is incompatible with ${range} range`);
+      return compatible;
     });
   }
 }
