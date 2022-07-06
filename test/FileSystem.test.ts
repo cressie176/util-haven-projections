@@ -119,6 +119,14 @@ export default describe("Projection", () => {
     eq(data[0].fullName, "Marrion Robert Morrison");
   });
 
+  it("should write variant type definitions", () => {
+    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+    fileSystem.writeVariant("data-parks", "all", []);
+
+    const typedefs = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "all.d.ts"));
+    eq(typedefs.isFile(), true);
+  });
+
   function load(p: string) {
     invalidations.push(p);
     return require(p);
