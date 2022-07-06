@@ -3,11 +3,13 @@ import { strictEqual as eq, match, ok } from "assert";
 import { describe, it, beforeEach } from "zunit";
 import FileSystem from "../src/FileSystem";
 
+const cwd = path.join(__dirname, "testdata");
+
 export default describe("Projection", () => {
   let fileSystem: FileSystem;
 
   beforeEach(() => {
-    fileSystem = new FileSystem(path.join(__dirname, "testdata"));
+    fileSystem = new FileSystem(cwd);
   });
 
   it("should load data sources", () => {
@@ -26,5 +28,9 @@ export default describe("Projection", () => {
     const schemas = fileSystem.loadSchemas("parks");
     eq(schemas.length, 1);
     eq(schemas[0].version, "1.0.0");
+  });
+
+  it("should get package directory", () => {
+    eq(fileSystem.getPackageDir("foo"), `${cwd}/dist/packages/foo`);
   });
 });
