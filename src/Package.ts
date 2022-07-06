@@ -40,8 +40,8 @@ export default class Package {
     return this._fileSystem.getPackageDir(this.name);
   }
 
-  build() {
-    const records = this._projection.generate();
+  async build() {
+    const records = await this._projection.generate();
     this._write(records);
   }
 

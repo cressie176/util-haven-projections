@@ -1,10 +1,7 @@
 import { AnySchema } from "yup";
 
-export type TemporalProjectionType = {
-  name: string;
-  version: string;
-  types: string;
-  records: TemporalRecordType[];
+export type DataSourceType = {
+  fetch(): Promise<TemporalRecordType[]>;
 };
 
 export type TemporalRecordType = {

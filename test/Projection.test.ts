@@ -1,16 +1,16 @@
-import { strictEqual as eq, throws } from "assert";
+import { strictEqual as eq, rejects } from "assert";
 import { describe, it } from "zunit";
 import { object, array, string } from "yup";
 import { FileSystemType } from "../src/FileSystem";
 import Projection from "../src/Projection";
 import { TemporalRecordType, SchemasEntryType } from "../src";
-import Package from "../src/Package";
+import LiteralDataSource from "../src/datasources/LiteralDataSource";
 
 export default describe("Projection", () => {
-  it("should generate temporal records", () => {
+  it("should generate temporal records", async () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, SCHEMAS, TYPES);
     const projection = new TestProjection({ fileSystem });
-    const records = projection.generate();
+    const records = await projection.generate();
     eq(records.length, 2);
     eq(records[0].data.length, 2);
     eq(records[0].data[0].fullName, "John Wayne");
@@ -20,7 +20,7 @@ export default describe("Projection", () => {
     eq(records[1].data[1].fullName, "John Paul Sartre");
   });
 
-  it("should validate projections@major using matching schema version", () => {
+  it("should validate projections@major using matching schema version", async () => {
     const schemas = [
       {
         version: "1.0.0",
@@ -30,7 +30,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "1.0.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -39,7 +39,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should validate projections@major using compatible patch schema", () => {
+  it("should validate projections@major using compatible patch schema", async () => {
     const schemas = [
       {
         version: "1.0.1",
@@ -49,7 +49,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "1.0.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -58,7 +58,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should validate projections@major using compatible minor schema", () => {
+  it("should validate projections@major using compatible minor schema", async () => {
     const schemas = [
       {
         version: "1.0.0",
@@ -72,7 +72,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "1.0.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -81,7 +81,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should validate projections@minor using matching schema version", () => {
+  it("should validate projections@minor using matching schema version", async () => {
     const schemas = [
       {
         version: "0.1.0",
@@ -91,7 +91,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.1.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -100,7 +100,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should validate projections@minor using compatible patch schema", () => {
+  it("should validate projections@minor using compatible patch schema", async () => {
     const schemas = [
       {
         version: "0.1.1",
@@ -110,7 +110,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.1.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -119,7 +119,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should validate projections@patch using matching schema version", () => {
+  it("should validate projections@patch using matching schema version", async () => {
     const schemas = [
       {
         version: "0.0.1",
@@ -129,7 +129,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.0.1", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.constructor.name, "ValidationError");
@@ -138,7 +138,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should ignore incompatible schemas for projections@major", () => {
+  it("should ignore incompatible schemas for projections@major", async () => {
     const schemas = [
       {
         version: "2.0.0",
@@ -157,10 +157,10 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "2.0.0", fileSystem });
 
-    projection.generate();
+    await projection.generate();
   });
 
-  it("should ignore incompatible schemas for projections@minor", () => {
+  it("should ignore incompatible schemas for projections@minor", async () => {
     const schemas = [
       {
         version: "0.2.0",
@@ -187,10 +187,10 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.2.0", fileSystem });
 
-    projection.generate();
+    await projection.generate();
   });
 
-  it("should ignore incompatible schemas for projections@patch", () => {
+  it("should ignore incompatible schemas for projections@patch", async () => {
     const schemas = [
       {
         version: "0.0.2",
@@ -209,10 +209,10 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.0.2", fileSystem });
 
-    projection.generate();
+    await projection.generate();
   });
 
-  it("should error when projection@major has no current schema", () => {
+  it("should error when projection@major has no current schema", async () => {
     const schemas = [
       {
         version: "2.2.0",
@@ -227,7 +227,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "2.1.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.message, "Projection staff-full-names@2.1.0 has no current schema");
@@ -236,7 +236,7 @@ export default describe("Projection", () => {
     );
   });
 
-  it("should error when projection@minor has no current schema", () => {
+  it("should error when projection@minor has no current schema", async () => {
     const schemas = [
       {
         version: "0.1.0",
@@ -251,7 +251,7 @@ export default describe("Projection", () => {
     const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
     const projection = new TestProjection({ version: "0.2.0", fileSystem });
 
-    throws(
+    await rejects(
       () => projection.generate(),
       (err: Error) => {
         eq(err.message, "Projection staff-full-names@0.2.0 has no current schema");
@@ -268,7 +268,7 @@ type TestProjectionOptionsType = {
 
 class TestProjection extends Projection<SourceType, ProjectionType> {
   constructor({ version = "1.0.0", fileSystem }: TestProjectionOptionsType) {
-    super("staff-full-names", version, "staff", { fileSystem });
+    super("staff-full-names", version, staffDataSource, { fileSystem });
   }
   _build(people: SourceType[]): ProjectionType[] {
     return people.map((person) => {
@@ -357,3 +357,5 @@ const SCHEMAS = [
 ];
 
 const TYPES = "type foo = string";
+
+const staffDataSource = new LiteralDataSource("staff", STAFF_DATA);

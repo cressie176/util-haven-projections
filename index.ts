@@ -5,16 +5,19 @@ import Parks from "./projections/parks";
 import ParkOpeningDates from "./projections/park-opening-dates";
 
 const debug = Debug("haven:projections");
+const dryRun = process.argv.includes("--dry-run");
 
-const args = process.argv;
-const dryRun = args.includes("--dry-run");
+const projections = [new Parks(), new ParkOpeningDates()];
 
-[new Parks(), new ParkOpeningDates()].forEach((projection) => {
-  const pkg = new Package(projection);
-  if (npm.isPublished(pkg)) {
-    debug(`Package ${pkg.fqn} has already been published - skipping`);
-    return;
+(async () => {
+  for (let i = 0; i < projections.length; i++) {
+    const projection = projections[i];
+    const pkg = new Package(projection);
+    if (npm.isPublished(pkg)) {
+      debug(`Package ${pkg.fqn} has already been published - skipping`);
+      continue;
+    }
+    await pkg.build();
+    npm.publish(pkg, { dryRun });
   }
-  pkg.build();
-  npm.publish(pkg, { dryRun });
-});
+})();

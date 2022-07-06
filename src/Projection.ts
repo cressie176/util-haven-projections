@@ -1,7 +1,7 @@
 import Debug from "debug";
 import semver from "semver";
 import { object, date, array } from "yup";
-import { TemporalRecordType, SchemasEntryType } from ".";
+import { DataSourceType, TemporalRecordType, SchemasEntryType } from ".";
 import FileSystem, { FileSystemType } from "./FileSystem";
 
 const debug = Debug("haven:projections:Projection");
@@ -24,14 +24,15 @@ export type ProjectionOptionsType = {
 export default abstract class Projection<SourceType, ProjectionType> {
   private _name: string;
   private _version: string;
-  private _source: TemporalRecordType[];
+  private _source: DataSourceType;
+
   private _schemas: SchemasEntryType[];
 
-  constructor(name: string, version: string, sourceName: string, options: ProjectionOptionsType = {}) {
+  constructor(name: string, version: string, source: DataSourceType, options: ProjectionOptionsType = {}) {
     this._name = name;
     this._version = version;
+    this._source = source;
     const fileSystem = options.fileSystem || new FileSystem();
-    this._source = fileSystem.loadDataSource(sourceName);
     this._schemas = fileSystem.loadSchemas(name);
   }
 
@@ -43,15 +44,16 @@ export default abstract class Projection<SourceType, ProjectionType> {
     return this._version;
   }
 
-  generate(): TemporalRecordType[] {
+  async generate(): Promise<TemporalRecordType[]> {
     debug(`Generating projection: ${this._name}@${this._version}`);
-    const records = this._source.map(({ effectiveDate, data }) => {
+    const sourceRecords = await this._source.fetch();
+    const projectedRecords = sourceRecords.map(({ effectiveDate, data }) => {
       return { effectiveDate, data: this._build(data) };
     });
 
-    this._validate(records);
+    this._validate(projectedRecords);
 
-    return records;
+    return projectedRecords;
   }
 
   abstract _build(source: SourceType[]): ProjectionType[];
