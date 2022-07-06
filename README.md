@@ -116,7 +116,7 @@ The solution adopted by this project is to store source data in a GitHub reposit
 ```ts
 import projection from "data-park-opening-dates/current-and-future";
 
-// Gets the current park opening dates
+// Get the current park opening dates
 const parkOpeningDates = projection.get();
 
 // Get future park opening dates
