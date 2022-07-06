@@ -83,7 +83,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
 
   private _validateData(records: TemporalRecordType[]) {
     const schemas = this._getCompatibleSchemas();
-    if (schemas.length === 0) throw new Error(`Projection ${this._name}@${this._version} has no compatible schema`);
+    if (!this._hasCurrentSchema(schemas)) throw new Error(`Projection ${this.name}@${this.version} has no current schema`);
 
     schemas.forEach(({ version, schema }) => {
       records.forEach((record) => {
@@ -100,5 +100,15 @@ export default abstract class Projection<SourceType, ProjectionType> {
       if (!compatible) debug(`Ignoring schema ${version} as it is incompatible with ${range} range`);
       return compatible;
     });
+  }
+
+  private _hasCurrentSchema(schemas: SchemasEntryType[]): boolean {
+    const { major, minor } = semver.parse(this._version);
+    return Boolean(
+      schemas.find(({ version }) => {
+        const { major: major2, minor: minor2 } = semver.parse(version);
+        return major === major2 && minor === minor2;
+      })
+    );
   }
 }

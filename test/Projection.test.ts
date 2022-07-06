@@ -31,7 +31,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -50,7 +50,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -59,6 +59,10 @@ export default describe("Projection", () => {
 
   it("should validate projections@major using compatible minor schema", () => {
     const schemas = [
+      {
+        version: "1.0.0",
+        schema: array(),
+      },
       {
         version: "1.1.0",
         schema: array().test(() => false),
@@ -69,7 +73,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -88,7 +92,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -107,7 +111,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -126,7 +130,7 @@ export default describe("Projection", () => {
 
     throws(
       () => projection.generate(),
-      (err) => {
+      (err: Error) => {
         eq(err.constructor.name, "ValidationError");
         return true;
       }
@@ -205,6 +209,54 @@ export default describe("Projection", () => {
     const projection = new TestProjection({ version: "0.0.2", fileSystem });
 
     projection.generate();
+  });
+
+  it("should error when projection@major has no current schema", () => {
+    const schemas = [
+      {
+        version: "2.2.0",
+        schema: array(),
+      },
+      {
+        version: "2.0.0",
+        schema: array(),
+      },
+    ];
+
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "2.1.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err: Error) => {
+        eq(err.message, "Projection staff-full-names@2.1.0 has no current schema");
+        return true;
+      }
+    );
+  });
+
+  it("should error when projection@minor has no current schema", () => {
+    const schemas = [
+      {
+        version: "0.1.0",
+        schema: array(),
+      },
+      {
+        version: "0.3.0",
+        schema: array(),
+      },
+    ];
+
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
+    const projection = new TestProjection({ version: "0.2.0", fileSystem });
+
+    throws(
+      () => projection.generate(),
+      (err: Error) => {
+        eq(err.message, "Projection staff-full-names@0.2.0 has no current schema");
+        return true;
+      }
+    );
   });
 });
 
