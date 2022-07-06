@@ -27,9 +27,4 @@ export default describe("Projection", () => {
     eq(schemas.length, 1);
     eq(schemas[0].version, "1.0.0");
   });
-
-  it("should load type definitions", () => {
-    const types = fileSystem.loadTypeDefinitions("parks");
-    match(types, /export type ProjectionType/);
-  });
 });

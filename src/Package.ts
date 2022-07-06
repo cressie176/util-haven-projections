@@ -4,19 +4,27 @@ import fs from "fs";
 import path from "path";
 import { TemporalRecordType } from ".";
 import Projection from "./Projection";
+import FileSystem, { FileSystemType } from "./FileSystem";
 
 const debug = Debug("haven:projections:Package");
+
+type PackageOptionsType = {
+  projection: Projection<any, any>;
+  fileSystem?: FileSystemType;
+};
 
 export default class Package {
   private _name: string;
   private _version: string;
   private _baseDir: string;
   private _projection: any;
+  private _fileSystem: FileSystemType;
 
-  constructor(projection: Projection<any, any>) {
+  constructor({ projection, fileSystem = new FileSystem() }: PackageOptionsType) {
     this._name = `data-${projection.name}`;
     this._version = projection.version;
     this._projection = projection;
+    this._fileSystem = fileSystem;
     this._baseDir = path.join(process.cwd(), "dist", "packages", this._name);
   }
 
@@ -39,7 +47,7 @@ export default class Package {
 
   private _write(records: TemporalRecordType[]) {
     debug(`Writing package ${this.fqn} to ${this._baseDir}`);
-    this._init();
+    this._fileSystem.initPackage(this._projection, this);
     this._writeVariant("all", records);
     this._writeVariant("currentAndFuture", this._getCurrentAndFutureRecords(records));
   }
@@ -56,19 +64,6 @@ export default class Package {
   link() {
     debug(`Linking package ${this.fqn} from ${this._baseDir}`);
     npm.publish({ cwd: this._baseDir, dryRun: true });
-  }
-
-  private _init() {
-    fs.mkdirSync(path.join(this._baseDir, "data"), { recursive: true });
-    const pkg = { name: this._name, version: this._version };
-    const pkgPath = path.join(this._baseDir, "package.json");
-    this._writeJsonSync(pkgPath, pkg);
-
-    fs.writeFileSync(path.join(this._baseDir, `index.d.ts`), this._projection.types, "utf-8");
-
-    if (fs.existsSync(".npmrc")) {
-      fs.copyFileSync(".npmrc", path.join(this._baseDir, ".npmrc"));
-    }
   }
 
   private _getCurrentAndFutureRecords(records: TemporalRecordType[]) {

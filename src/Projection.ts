@@ -29,14 +29,12 @@ export default abstract class Projection<SourceType, ProjectionType> {
   private _version: string;
   private _source: TemporalRecordType[];
   private _schemas: SchemasEntryType[];
-  private _types: string;
 
   constructor({ name, version, source, fileSystem = new FileSystem() }: ProjectionOptionsType) {
     this._name = name;
     this._version = version;
     this._source = fileSystem.loadDataSource(source);
     this._schemas = fileSystem.loadSchemas(this._name);
-    this._types = fileSystem.loadTypeDefinitions(this._name);
   }
 
   get name() {
@@ -45,10 +43,6 @@ export default abstract class Projection<SourceType, ProjectionType> {
 
   get version() {
     return this._version;
-  }
-
-  get types() {
-    return this._types;
   }
 
   generate(): TemporalRecordType[] {

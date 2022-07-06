@@ -4,6 +4,7 @@ import { object, array, string } from "yup";
 import { FileSystemType } from "../src/FileSystem";
 import Projection from "../src/Projection";
 import { TemporalRecordType, SchemasEntryType } from "../src";
+import Package from "../src/Package";
 
 export default describe("Projection", () => {
   it("should generate temporal records", () => {
@@ -302,9 +303,7 @@ class StubFileSystem implements FileSystemType {
   loadSchemas(projection: string): SchemasEntryType[] {
     return this._schemas;
   }
-  loadTypeDefinitions(projection: string): string {
-    return this._types;
-  }
+  initPackage(projection: Projection<any, any>, pkg: Package): void {}
 }
 
 const STAFF_DATA: TemporalRecordType[] = [

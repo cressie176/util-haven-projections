@@ -2,13 +2,15 @@ import Debug from "debug";
 import fs from "fs";
 import path from "path";
 import { TemporalRecordType, SchemasEntryType } from ".";
+import Package from "./Package";
+import Projection from "./Projection";
 
 const debug = Debug("haven:projections:FileSystem");
 
 export type FileSystemType = {
   loadDataSource(source: string): TemporalRecordType[];
   loadSchemas(projection: string): SchemasEntryType[];
-  loadTypeDefinitions(projection: string): string;
+  initPackage(projection: Projection<any, any>, pkg: Package): void;
 };
 
 export default class FileSystem implements FileSystemType {
@@ -19,7 +21,7 @@ export default class FileSystem implements FileSystemType {
   }
 
   loadDataSource(source: string) {
-    const dataSourceDir = this._sourcesDir(source);
+    const dataSourceDir = this._sourceDir(source);
     const pattern = new RegExp(`^${source}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z.json$`, "i");
     debug(`Loading data source from ${dataSourceDir} matching ${pattern}`);
 
@@ -57,18 +59,34 @@ export default class FileSystem implements FileSystemType {
       });
   }
 
-  loadTypeDefinitions(projection: string): string {
-    const typesPath = this._projectionDir(projection, "index.d.ts");
-    debug(`Loading type definitions from ${typesPath}`);
+  initPackage(projection: Projection<any, any>, pkg: Package) {
+    const packageDir = this._packageDir(pkg.name);
+    const projectionDir = this._projectionDir(projection.name);
 
-    return fs.readFileSync(this._projectionDir(projection, "index.d.ts"), "utf-8");
+    fs.rmSync(packageDir, { recursive: true, force: true });
+    fs.mkdirSync(packageDir, { recursive: true });
+    fs.mkdirSync(path.join(packageDir, "data"));
+    writeJsonSync(path.join(packageDir, "package.json"), { name: pkg.name, version: pkg.version });
+
+    fs.copyFileSync(path.join(projectionDir, "index.d.ts"), path.join(packageDir, "index.d.ts"));
+
+    fs.copyFileSync(path.join(this._baseDir, ".npmrc"), path.join(packageDir, ".npmrc"));
   }
 
-  _projectionDir(projection: string, ...paths: string[]) {
-    return path.join(this._baseDir, "projections", projection, ...paths);
+  _sourceDir(name: string, ...paths: string[]) {
+    return path.join(this._baseDir, "sources", name, ...paths);
   }
 
-  _sourcesDir(source: string, ...paths: string[]) {
-    return path.join(this._baseDir, "sources", source, ...paths);
+  _projectionDir(name: string, ...paths: string[]) {
+    return path.join(this._baseDir, "projections", name, ...paths);
   }
+
+  _packageDir(name: string, ...paths: string[]) {
+    return path.join(this._baseDir, "dist", "packages", name, ...paths);
+  }
+}
+
+function writeJsonSync(fullPath: string, document: any) {
+  const contents = JSON.stringify(document, null, 2);
+  fs.writeFileSync(fullPath, contents, "utf-8");
 }

@@ -9,7 +9,7 @@ const args = process.argv;
 const dryRun = args.includes("--dry-run");
 
 [new Parks(), new ParkOpeningDates()].forEach((projection) => {
-  const pkg = new Package(projection);
+  const pkg = new Package({ projection });
   if (pkg.isPublished()) {
     debug(`Package ${pkg.fqn} has already been published - skipping`);
     return;
