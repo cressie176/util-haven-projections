@@ -11,6 +11,11 @@ export default describe("Projection", () => {
 
   beforeEach(() => {
     fileSystem = new FileSystem(cwd);
+
+    const pkgPath = path.join(cwd, "dist", "packages", "data-parks", "package.json");
+    delete require.cache[pkgPath];
+
+    fs.rmSync(path.join(cwd, "dist"), { recursive: true, force: true });
   });
 
   it("should load data sources", () => {
@@ -57,5 +62,14 @@ export default describe("Projection", () => {
     const pkg = require(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
     eq(pkg.name, "data-parks");
     eq(pkg.version, "1.0.0");
+  });
+
+  it("should replace existing packages", () => {
+    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+    fileSystem.initPackage("data-parks", "1.0.1", "parks");
+
+    const pkg = require(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    eq(pkg.name, "data-parks");
+    eq(pkg.version, "1.0.1");
   });
 });
