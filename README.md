@@ -96,6 +96,7 @@ The solution adopted by this project is to store source data in a GitHub reposit
 
 - Easy add more sources and projections
 - Easy to consume projections (npm install)
+- Easy to add more delivery mechanisms (e.g. upload projections to S3 for consumption by snowflake)
 - Reliable (no network dependency)
 - Traceable via the consumer's package.json files
 - Provides an explicit, validated data format
