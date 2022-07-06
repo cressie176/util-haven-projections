@@ -2,8 +2,6 @@ import Debug from "debug";
 import fs from "fs";
 import path from "path";
 import { TemporalRecordType, SchemasEntryType } from ".";
-import Package from "./Package";
-import Projection from "./Projection";
 
 const debug = Debug("haven:projections:FileSystem");
 
