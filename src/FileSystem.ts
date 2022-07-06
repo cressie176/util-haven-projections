@@ -12,7 +12,7 @@ export type FileSystemType = {
   loadSchemas(projectionName: string): SchemasEntryType[];
   getPackageDir(packageName: string): string;
   initPackage(packageName: string, packageVersion: string, projectionName: string): void;
-  writeVariant(packageName: string, variantName: string, recors: TemporalRecordType[]): void;
+  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[]): void;
 };
 
 export default class FileSystem implements FileSystemType {
@@ -101,20 +101,23 @@ export default class FileSystem implements FileSystemType {
   _writeVariantScript(packageName: string, variantName: string) {
     const variantDataPath = this._variantDataPath(packageName, variantName);
     const requirePath = path.relative(this._packageDir(packageName), variantDataPath);
-    const script = `const records = require('.${path.sep}${requirePath}');
-      module.exports = {
-        get(effectiveDate = Date.now()) {
-          const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
-          return record ? record.data : null;
-        }
-      }`;
+    const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
+const records = require('.${path.sep}${requirePath}');
+module.exports = {
+  get(effectiveDate = Date.now()) {
+    const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
+    return record ? record.data : null;
+  }
+}`;
 
     writeFile(this._packageDir(packageName, `${variantName}.js`), script);
   }
 
   _writeVariantTypeDefintions(packageName: string, variantName: string) {
-    const typedef = `import { ProjectionType } from './types';
-      export function get(effectiveDate? : Date): ProjectionType[];`;
+    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
+import { ProjectionType } from './types';
+export function get(effectiveDate? : Date): ProjectionType[];
+`;
 
     const variantTypesPath = this._packageDir(packageName, `${variantName}.d.ts`);
     writeFile(variantTypesPath, typedef);

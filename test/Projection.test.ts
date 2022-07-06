@@ -16,7 +16,7 @@ export default describe("Projection", () => {
     eq(records[0].data[0].fullName, "John Wayne");
     eq(records[0].data[1].fullName, "John Paul Sartre");
     eq(records[1].data.length, 2);
-    eq(records[1].data[0].fullName, "Marrion Robbert Morrison");
+    eq(records[1].data[0].fullName, "Marrion Robert Morrison");
     eq(records[1].data[1].fullName, "John Paul Sartre");
   });
 
@@ -332,7 +332,7 @@ const STAFF_DATA: TemporalRecordType[] = [
     effectiveDate: new Date("2021-01-01T00:00:00Z"),
     data: [
       {
-        givenNames: ["Marrion", "Robbert"],
+        givenNames: ["Marrion", "Robert"],
         surname: "Morrison",
       },
       {

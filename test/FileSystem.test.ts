@@ -1,21 +1,25 @@
 import fs from "fs";
 import path from "path";
 import { strictEqual as eq, match, ok } from "assert";
-import { describe, it, beforeEach } from "zunit";
+import { describe, it, beforeEach, afterEach } from "zunit";
 import FileSystem from "../src/FileSystem";
 
 const cwd = path.join(__dirname, "testdata");
 
 export default describe("Projection", () => {
   let fileSystem: FileSystem;
+  let invalidations: string[] = [];
 
   beforeEach(() => {
     fileSystem = new FileSystem(cwd);
-
-    const pkgPath = path.join(cwd, "dist", "packages", "data-parks", "package.json");
-    delete require.cache[pkgPath];
-
     fs.rmSync(path.join(cwd, "dist"), { recursive: true, force: true });
+  });
+
+  afterEach(() => {
+    invalidations.forEach(() => {
+      const key = path.join(cwd, "dist", "packages", "data-parks", "package.json");
+      delete require.cache[key];
+    });
   });
 
   it("should load data sources", () => {
@@ -59,7 +63,7 @@ export default describe("Projection", () => {
     const typedefs = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "index.d.ts"));
     eq(typedefs.isFile(), true);
 
-    const pkg = require(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    const pkg = load(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
     eq(pkg.name, "data-parks");
     eq(pkg.version, "1.0.0");
   });
@@ -68,8 +72,55 @@ export default describe("Projection", () => {
     fileSystem.initPackage("data-parks", "1.0.0", "parks");
     fileSystem.initPackage("data-parks", "1.0.1", "parks");
 
-    const pkg = require(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    const pkg = load(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
     eq(pkg.name, "data-parks");
     eq(pkg.version, "1.0.1");
   });
+
+  it("should write variants", () => {
+    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+    const records = [
+      {
+        effectiveDate: new Date("2021-01-01T00:00:00Z"),
+        data: [{ fullName: "John Wayne" }],
+      },
+      {
+        effectiveDate: new Date("2020-01-01T00:00:00Z"),
+        data: [{ fullName: "Marrion Robert Morrison" }],
+      },
+    ];
+    fileSystem.writeVariant("data-parks", "all", records);
+
+    const projection = load(path.join(cwd, "dist", "packages", "data-parks", "all"));
+    const data = projection.get();
+
+    eq(data.length, 1);
+    eq(data[0].fullName, "John Wayne");
+  });
+
+  it("should honour effective dates", () => {
+    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+    const records = [
+      {
+        effectiveDate: new Date("2021-01-01T00:00:00Z"),
+        data: [{ fullName: "John Wayne" }],
+      },
+      {
+        effectiveDate: new Date("2020-01-01T00:00:00Z"),
+        data: [{ fullName: "Marrion Robert Morrison" }],
+      },
+    ];
+    fileSystem.writeVariant("data-parks", "all", records);
+
+    const projection = load(path.join(cwd, "dist", "packages", "data-parks", "all"));
+    const data = projection.get(new Date("2020-06-01T00:00:00Z"));
+
+    eq(data.length, 1);
+    eq(data[0].fullName, "Marrion Robert Morrison");
+  });
+
+  function load(p: string) {
+    invalidations.push(p);
+    return require(p);
+  }
 });
