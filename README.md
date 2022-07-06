@@ -114,14 +114,14 @@ The solution adopted by this project is to store source data in a GitHub reposit
 ## Usage
 
 ```ts
-import parkOpeningDatesProjection from "@havenEngineering/data-park-opening-dates/current-and-future";
+import projection from "data-park-opening-dates/current-and-future";
 
 // Gets the current park opening dates
-const parkOpeningDates = parkOpeningDatesProjection.get();
+const parkOpeningDates = projection.get();
 
 // Get future park opening dates
 const nextSeason = new Date("2023-01-01");
-const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
+const parkOpeningDates = projection.get(nextSeason);
 ```
 
 ### Adding Data Sources
