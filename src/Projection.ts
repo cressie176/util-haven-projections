@@ -81,7 +81,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
 
     schemas.forEach(({ version, schema }) => {
       records.forEach((record) => {
-        debug(`Validating data for ${this._name}/${record.effectiveDate} using schema ${version}`);
+        debug(`Validating data for ${this._name}/${record.effectiveDate.toISOString()} using schema ${version}`);
         schema.validateSync(record.data, { strict: true, abortEarly: true });
       });
     });

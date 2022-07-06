@@ -1,39 +1,31 @@
-import { execSync, ExecSyncOptionsWithStringEncoding } from "node:child_process";
+import Debug from "debug";
+import { execSync } from "node:child_process";
+import Package from "./Package";
 
-type isPublishedOptionsType = {
-  scope?: string;
-  pkg: string;
-  version?: string;
-};
+const debug = Debug("haven:projections:npm");
 
 type publishOptionsType = {
-  cwd: string;
   dryRun?: boolean;
 };
 
-type linkOptionsType = {
-  cwd: string;
-};
-
-export function isPublished({ scope, pkg, version }: isPublishedOptionsType): boolean {
-  const artefact = [scope ? `@${scope}` : "", pkg, version ? `@${version}` : ""].join("");
+export function isPublished(pkg: Package): boolean {
   try {
-    execute(`npm view ${artefact}`);
+    execute(`npm view ${pkg.fqn}`);
   } catch (error) {
     return false;
   }
   return true;
 }
 
-export function publish({ cwd, dryRun }: publishOptionsType) {
-  const args = [dryRun ? "--dry-run" : ""].join(" ");
-  execute(`npm publish ${args}`, { cwd });
+export function publish(pkg: Package, { dryRun }: publishOptionsType) {
+  execute(`npm publish ${dryRun ? "--dry-run" : ""}`, { cwd: pkg.baseDir });
 }
 
-export function link({ cwd }: linkOptionsType) {
-  execute(`npm link`, { cwd });
+export function link(pkg: Package) {
+  execute(`npm link`, { cwd: pkg.baseDir });
 }
 
-function execute(command: string, options?: any) {
+function execute(command: string, options: any = {}) {
+  debug(`executing ${command} with options %o`, options);
   execSync(command, { encoding: "utf-8", stdio: "pipe", ...options });
 }
