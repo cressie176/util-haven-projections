@@ -1,5 +1,5 @@
 import Debug from "debug";
-import { execSync } from "node:child_process";
+import { exec } from "node:child_process";
 import Package from "./Package";
 
 const debug = Debug("haven:projections:npm");
@@ -8,24 +8,28 @@ type publishOptionsType = {
   dryRun?: boolean;
 };
 
-export function isPublished(pkg: Package): boolean {
+export async function isPublished(pkg: Package): Promise<boolean> {
   try {
-    execute(`npm view ${pkg.fqn}`);
+    await execute(`npm view ${pkg.fqn}`);
   } catch (error) {
     return false;
   }
   return true;
 }
 
-export function publish(pkg: Package, { dryRun }: publishOptionsType) {
-  execute(`npm publish ${dryRun ? "--dry-run" : ""}`, { cwd: pkg.baseDir });
+export async function publish(pkg: Package, { dryRun }: publishOptionsType) {
+  return execute(`npm publish ${dryRun ? "--dry-run" : ""}`, { cwd: pkg.baseDir });
 }
 
-export function link(pkg: Package) {
-  execute(`npm link`, { cwd: pkg.baseDir });
+export async function link(pkg: Package) {
+  return execute(`npm link`, { cwd: pkg.baseDir });
 }
 
-function execute(command: string, options: any = {}) {
+async function execute(command: string, options: any = {}): Promise<void> {
   debug(`executing ${command} with options %o`, options);
-  execSync(command, { encoding: "utf-8", stdio: "pipe", ...options });
+  return new Promise((resolve, reject) => {
+    exec(command, { encoding: "utf-8", stdio: "pipe", ...options }, (err) => {
+      return err ? reject(err) : resolve();
+    });
+  });
 }

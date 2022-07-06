@@ -12,12 +12,14 @@ const projections = [new Parks(), new ParkOpeningDates()];
 (async () => {
   for (let i = 0; i < projections.length; i++) {
     const projection = projections[i];
+
     const pkg = new Package(projection);
-    if (npm.isPublished(pkg)) {
+    const isPublished = await npm.isPublished(pkg);
+    if (isPublished) {
       debug(`Package ${pkg.fqn} has already been published - skipping`);
       continue;
     }
     await pkg.build();
-    npm.publish(pkg, { dryRun });
+    await npm.publish(pkg, { dryRun });
   }
 })();
