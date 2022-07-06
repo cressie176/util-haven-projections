@@ -174,23 +174,23 @@ const parkOpeningDates = parkOpeningDatesProjection.get(nextSeason);
    ```sh
    mkdir projections/park-opening-dates
    ```
-1. Add TypeScript definitions in `types.d.ts`, You **must** export a type called `ProjectionType` e.g.
+1. Add TypeScript definitions in `index.d.ts`, You **must** export a type called `ProjectionType` e.g.
 
    ```ts
    export type ProjectionType = ParkOpeningDatesType;
 
-   type ParkOpeningDatesType = {
+   export type ParkOpeningDatesType = {
      code: string;
      openingDates: OpeningDatesType;
    };
 
-   type OpeningDatesType = {
+   export type OpeningDatesType = {
      guests: DateRangeType[];
      owners: DateRangeType[];
      touring: DateRangeType[];
    };
 
-   type DateRangeType = {
+   export type DateRangeType = {
      from: string;
      to: string;
    };

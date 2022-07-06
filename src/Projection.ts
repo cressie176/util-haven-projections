@@ -109,7 +109,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
   }
 
   private _loadTypes(): string {
-    const typesPath = path.join(this._baseDir, "types.d.ts");
+    const typesPath = path.join(this._baseDir, "index.d.ts");
     return fs.readFileSync(typesPath, "utf-8");
   }
 

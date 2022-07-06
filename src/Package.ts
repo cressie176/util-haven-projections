@@ -64,7 +64,7 @@ export default class Package {
     const pkgPath = path.join(this._baseDir, "package.json");
     this._writeJsonSync(pkgPath, pkg);
 
-    fs.writeFileSync(path.join(this._baseDir, `types.d.ts`), this._projection.types, "utf-8");
+    fs.writeFileSync(path.join(this._baseDir, `index.d.ts`), this._projection.types, "utf-8");
 
     if (fs.existsSync(".npmrc")) {
       fs.copyFileSync(".npmrc", path.join(this._baseDir, ".npmrc"));

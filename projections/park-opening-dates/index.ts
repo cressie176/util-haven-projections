@@ -1,6 +1,6 @@
 import Projection from "../../src/Projection";
 import { SourceType } from "../../sources/parks";
-import { ProjectionType } from "./types";
+import { ProjectionType } from "./index.d";
 
 export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
   constructor() {
