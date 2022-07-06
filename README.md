@@ -126,6 +126,8 @@ const parkOpeningDates = projection.get(nextSeason);
 
 ### Adding Data Sources
 
+A data source fetches the raw data we want to project. To add a data source...
+
 1. Create a folder within `sources`, e.g.
    ```sh
    mkdir sources/parks
@@ -140,7 +142,7 @@ const parkOpeningDates = projection.get(nextSeason);
      ]
    }
    ```
-1. Add type definitions to the folder in a file called `index.d.ts`. It will make life easier if you export a type called `SourceType` e.g.
+1. Add type definitions in a file called `index.d.ts`. It will make life easier if you export a type called `SourceType` e.g.
 
    ```ts
    export SourceType = ParkType;
@@ -168,12 +170,22 @@ const parkOpeningDates = projection.get(nextSeason);
    };
    ```
 
+1. Add the data source in a file called `index.ts`. At the moment only a LocalDataSource is provided. This will fetch the JSON files from the same directory.
+   ```ts
+   import LocalDataSource from "../../src/datasources/LocalDataSource";
+   ```
+
+export default new LocalDataSource("parks");
+
+````
+
 ### Adding Projections
 
 1. Create a folder within `projections`. The name must confirm to [npm's package name rules](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#name). e.g.
-   ```sh
-   mkdir projections/park-opening-dates
-   ```
+```sh
+mkdir projections/park-opening-dates
+````
+
 1. Add TypeScript definitions in `index.d.ts`, You **must** export a type called `ProjectionType` e.g.
 
    ```ts
@@ -200,26 +212,31 @@ const parkOpeningDates = projection.get(nextSeason);
 
    ```ts
    import Projection from "../../src/Projection";
-   import { SourceType } from "../../sources/parks";
-   import { ProjectionType } from "./types";
-
-   export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
-     constructor() {
-       super("park-opening-dates", "1.0.0", "parks");
-     }
-
-     _build(parks: SourceType[]): ProjectionType[] {
-       return parks.map(({ code, openingDates }) => {
-         return { code, openingDates };
-       });
-     }
-   }
+   import parkDataSource from "../../sources/parks";
+   import { SourceType } from "../../sources/parks/index.d";
+   import { ProjectionType } from "./index.d";
    ```
+
+export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
+constructor() {
+super("park-opening-dates", "1.0.0", parkDataSource);
+}
+
+    _build(parks: SourceType[]): ProjectionType[] {
+      return parks.map(({ code, openingDates }) => {
+        return { code, openingDates };
+      });
+    }
+
+}
+
+````
 
 1. Create a subfolder called `schemas` for the yup schemas. e.g.
-   ```sh
-   mkdir projections/park-opening-dates/schemas
-   ```
+```sh
+mkdir projections/park-opening-dates/schemas
+````
+
 1. Add a [yup](https://www.npmjs.com/package/yup) schema to the schemas directory. The filename (excluding the extension) must match the projection version, e.g. `1.0.0.ts`
 
    ```ts
