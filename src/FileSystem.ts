@@ -12,8 +12,14 @@ export type FileSystemType = {
 };
 
 export default class FileSystem implements FileSystemType {
+  private _baseDir: string;
+
+  constructor(baseDir: string = process.cwd()) {
+    this._baseDir = baseDir;
+  }
+
   loadDataSource(source: string) {
-    const dataSourceDir = sourcesDir(source);
+    const dataSourceDir = this._sourcesDir(source);
     const pattern = new RegExp(`^${source}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z.json$`, "i");
     debug(`Loading data source from ${dataSourceDir} matching ${pattern}`);
 
@@ -37,7 +43,7 @@ export default class FileSystem implements FileSystemType {
   }
 
   loadSchemas(projection: string): SchemasEntryType[] {
-    const schemasDir = projectionDir(projection, "schemas");
+    const schemasDir = this._projectionDir(projection, "schemas");
     debug(`Loading schemas from: ${schemasDir}`);
     return fs
       .readdirSync(schemasDir)
@@ -52,17 +58,17 @@ export default class FileSystem implements FileSystemType {
   }
 
   loadTypeDefinitions(projection: string): string {
-    const typesPath = projectionDir(projection, "index.d.ts");
+    const typesPath = this._projectionDir(projection, "index.d.ts");
     debug(`Loading type definitions from ${typesPath}`);
 
-    return fs.readFileSync(projectionDir(projection, "index.d.ts"), "utf-8");
+    return fs.readFileSync(this._projectionDir(projection, "index.d.ts"), "utf-8");
   }
-}
 
-function projectionDir(projection: string, ...paths: string[]) {
-  return path.join(process.cwd(), "projections", projection, ...paths);
-}
+  _projectionDir(projection: string, ...paths: string[]) {
+    return path.join(this._baseDir, "projections", projection, ...paths);
+  }
 
-function sourcesDir(source: string, ...paths: string[]) {
-  return path.join(process.cwd(), "sources", source, ...paths);
+  _sourcesDir(source: string, ...paths: string[]) {
+    return path.join(this._baseDir, "sources", source, ...paths);
+  }
 }

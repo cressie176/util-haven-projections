@@ -2,7 +2,7 @@ import Debug from "debug";
 import semver from "semver";
 import { object, date, array } from "yup";
 import { TemporalRecordType, SchemasEntryType } from ".";
-import FileSystem from "./FileSystem";
+import FileSystem, { FileSystemType } from "./FileSystem";
 
 const debug = Debug("haven:projections:Projection");
 
@@ -21,7 +21,7 @@ export type ProjectionOptionsType = {
   name: string;
   version: string;
   source: string;
-  fileSystem?: FileSystem;
+  fileSystem?: FileSystemType;
 };
 
 export default abstract class Projection<SourceType, ProjectionType> {

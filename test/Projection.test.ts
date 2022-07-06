@@ -1,7 +1,7 @@
-import { strictEqual as eq, deepStrictEqual as deq, throws } from "assert";
+import { strictEqual as eq, throws } from "assert";
 import { describe, it } from "zunit";
 import { object, array, string } from "yup";
-import FileSystem from "../src/FileSystem";
+import { FileSystemType } from "../src/FileSystem";
 import Projection from "../src/Projection";
 import { TemporalRecordType, SchemasEntryType } from "../src";
 
@@ -262,7 +262,7 @@ export default describe("Projection", () => {
 
 type TestProjectionOptionsType = {
   version?: string;
-  fileSystem: FileSystem;
+  fileSystem: FileSystemType;
 };
 
 class TestProjection extends Projection<SourceType, ProjectionType> {
@@ -286,7 +286,7 @@ type ProjectionType = {
   fullName: string;
 };
 
-class StubFileSystem implements FileSystem {
+class StubFileSystem implements FileSystemType {
   private _data: TemporalRecordType[];
   private _types: string;
   private _schemas: SchemasEntryType[];

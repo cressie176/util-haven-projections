@@ -1,0 +1,67 @@
+{
+  "effectiveDate": "2022-12-01T00:00:00Z",
+  "data": [
+    {
+      "name": "Devon Cliffs",
+      "code": "DC",
+      "address": {
+        "addressLine1": "Devon Cliffs Holiday Park",
+        "addressLine2": "Sandy Bay",
+        "town": "Exmouth",
+        "county": "Devon",
+        "postCode": "EX8 5BT"
+      },
+      "telephone": "01395226226",
+      "coordinates": {
+        "latitude": 50.615,
+        "longitude": 3.3666
+      },
+      "dogFriendly": true,
+      "openingDates": {
+        "guests": [
+          { "from": "2023-03-11", "to": "2023-11-07" },
+          { "from": "2024-03-10", "to": "2024-11-06" }
+        ],
+        "touring": [
+          { "from": "2023-03-11", "to": "2023-11-07" },
+          { "from": "2024-03-10", "to": "2024-11-06" }
+        ],
+        "owners": [
+          { "from": "2023-03-11", "to": "2023-11-07" },
+          { "from": "2024-03-10", "to": "2024-11-06" }
+        ]
+      }
+    },
+    {
+      "name": "Seashore",
+      "code": "SX",
+      "address": {
+        "addressLine1": "Seashore Holiday Park",
+        "addressLine2": "North Denes",
+        "town": "Great Yarmouth",
+        "county": "Norfolk",
+        "postCode": "NR30 4HG"
+      },
+      "telephone": "01493851131",
+      "coordinates": {
+        "latitude": 52.6312,
+        "longitude": 1.7386
+      },
+      "dogFriendly": true,
+      "openingDates": {
+        "guests": [
+          { "from": "2022-03-11", "to": "2022-11-07" },
+          { "from": "2023-03-10", "to": "2023-11-06" }
+        ],
+        "touring": [
+          { "from": "2022-03-11", "to": "2022-11-07" },
+          { "from": "2023-03-10", "to": "2023-11-06" }
+        ],
+        "owners": [
+          { "from": "2022-03-11", "to": "2022-11-07" },
+          { "from": "2023-03-10", "to": "2023-11-06" }
+        ]
+      }
+    }
+  ]
+}
