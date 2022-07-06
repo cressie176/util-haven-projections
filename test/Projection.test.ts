@@ -268,7 +268,7 @@ type TestProjectionOptionsType = {
 
 class TestProjection extends Projection<SourceType, ProjectionType> {
   constructor({ version = "1.0.0", fileSystem }: TestProjectionOptionsType) {
-    super({ name: "staff-full-names", version, source: "staff", fileSystem });
+    super("staff-full-names", version, "staff", { fileSystem });
   }
   _build(people: SourceType[]): ProjectionType[] {
     return people.map((person) => {

@@ -18,9 +18,6 @@ const ENVELOPE_SCHEMA = array()
   );
 
 export type ProjectionOptionsType = {
-  name: string;
-  version: string;
-  source: string;
   fileSystem?: FileSystemType;
 };
 
@@ -30,11 +27,12 @@ export default abstract class Projection<SourceType, ProjectionType> {
   private _source: TemporalRecordType[];
   private _schemas: SchemasEntryType[];
 
-  constructor({ name, version, source, fileSystem = new FileSystem() }: ProjectionOptionsType) {
+  constructor(name: string, version: string, sourceName: string, options: ProjectionOptionsType = {}) {
     this._name = name;
     this._version = version;
-    this._source = fileSystem.loadDataSource(source);
-    this._schemas = fileSystem.loadSchemas(this._name);
+    const fileSystem = options.fileSystem || new FileSystem();
+    this._source = fileSystem.loadDataSource(sourceName);
+    this._schemas = fileSystem.loadSchemas(name);
   }
 
   get name() {

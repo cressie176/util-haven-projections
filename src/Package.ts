@@ -17,7 +17,7 @@ export default class Package {
   constructor(projection: Projection<any, any>, options: PackageOptionsType = {}) {
     this._name = `data-${projection.name}`;
     this._projection = projection;
-    this._fileSystem = options.fileSystem ? options.fileSystem : new FileSystem();
+    this._fileSystem = options.fileSystem || new FileSystem();
   }
 
   get name() {

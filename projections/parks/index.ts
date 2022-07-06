@@ -5,7 +5,7 @@ import { ProjectionType } from "./index.d";
 
 export default class Parks extends Projection<SourceType, ProjectionType> {
   constructor() {
-    super({ name: "parks", version: "1.0.0", source: "parks" });
+    super("parks", "1.0.0", "parks");
   }
 
   _build(parks: SourceType[]): ProjectionType[] {

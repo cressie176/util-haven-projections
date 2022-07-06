@@ -205,7 +205,7 @@ const parkOpeningDates = projection.get(nextSeason);
 
    export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
      constructor() {
-       super({ baseDir: __dirname, version: "1.0.0", source: "parks" });
+       super("park-opening-dates", "1.0.0", "parks");
      }
 
      _build(parks: SourceType[]): ProjectionType[] {
