@@ -297,17 +297,21 @@ class StubFileSystem implements FileSystemType {
     this._schemas = schemas;
     this._types = types;
   }
-  getPackageDir(packageName: string): string {
-    return `dist/${packageName}`;
-  }
   loadDataSource(source: string): TemporalRecordType[] {
     return this._data;
   }
   loadSchemas(projection: string): SchemasEntryType[] {
     return this._schemas;
   }
-  initPackage(pkg: Package): void {}
-  writeVariant(packageName: string, variantName: string, recors: TemporalRecordType[]): void {}
+  getPackageDir(packageName: string): string {
+    throw new Error("Method not implemented.");
+  }
+  initPackage(packageName: string, packageVersion: string, projectionName: string): void {
+    throw new Error("Method not implemented.");
+  }
+  writeVariant(packageName: string, variantName: string, recors: TemporalRecordType[]): void {
+    throw new Error("Method not implemented.");
+  }
 }
 
 const STAFF_DATA: TemporalRecordType[] = [

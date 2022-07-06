@@ -47,7 +47,7 @@ export default class Package {
 
   private _write(records: TemporalRecordType[]) {
     debug(`Writing package ${this.fqn}`);
-    this._fileSystem.initPackage(this);
+    this._fileSystem.initPackage(this.name, this.version, this.projectionName);
     this._fileSystem.writeVariant(this.name, "all", records);
     this._fileSystem.writeVariant(this.name, "currentAndFuture", this._getCurrentAndFutureRecords(records));
   }

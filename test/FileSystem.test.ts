@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import { strictEqual as eq, match, ok } from "assert";
 import { describe, it, beforeEach } from "zunit";
@@ -31,6 +32,30 @@ export default describe("Projection", () => {
   });
 
   it("should get package directory", () => {
-    eq(fileSystem.getPackageDir("foo"), `${cwd}/dist/packages/foo`);
+    eq(fileSystem.getPackageDir("data-parks"), path.join(cwd, "dist", "packages", "data-parks"));
+  });
+
+  it("should initialise a new package", () => {
+    const before = new Date();
+    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+
+    const baseDir = fs.statSync(path.join(cwd, "dist", "packages", "data-parks"));
+    eq(baseDir.isDirectory(), true);
+
+    const created = baseDir.ctime;
+    ok(created >= before);
+
+    const dataDir = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "data"));
+    eq(dataDir.isDirectory(), true);
+
+    const npmrc = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", ".npmrc"));
+    eq(npmrc.isFile(), true);
+
+    const typedefs = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "index.d.ts"));
+    eq(typedefs.isFile(), true);
+
+    const pkg = require(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    eq(pkg.name, "data-parks");
+    eq(pkg.version, "1.0.0");
   });
 });

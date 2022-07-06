@@ -11,7 +11,7 @@ export type FileSystemType = {
   loadDataSource(sourceName: string): TemporalRecordType[];
   loadSchemas(projectionName: string): SchemasEntryType[];
   getPackageDir(packageName: string): string;
-  initPackage(pkg: Package): void;
+  initPackage(packageName: string, packageVersion: string, projectionName: string): void;
   writeVariant(packageName: string, variantName: string, recors: TemporalRecordType[]): void;
 };
 
@@ -65,9 +65,9 @@ export default class FileSystem implements FileSystemType {
     return this._packageDir(packageName);
   }
 
-  initPackage(pkg: Package) {
-    const projectionDir = this._projectionDir(pkg.projectionName);
-    const packageDir = this._packageDir(pkg.name);
+  initPackage(packageName: string, packageVersion: string, projectionName: string) {
+    const projectionDir = this._projectionDir(projectionName);
+    const packageDir = this._packageDir(packageName);
 
     debug(`Removing ${packageDir}`);
     fs.rmSync(packageDir, { recursive: true, force: true });
@@ -77,7 +77,7 @@ export default class FileSystem implements FileSystemType {
     fs.mkdirSync(path.join(packageDir, "data"));
 
     debug(`Writing package.json`);
-    writeJson(path.join(packageDir, "package.json"), { name: pkg.name, version: pkg.version });
+    writeJson(path.join(packageDir, "package.json"), { name: packageName, version: packageVersion });
 
     debug(`Copying type index.d.ts`);
     fs.copyFileSync(path.join(projectionDir, "index.d.ts"), path.join(packageDir, "index.d.ts"));
