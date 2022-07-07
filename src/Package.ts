@@ -76,7 +76,7 @@ module.exports = {
 }`;
 
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-import { ProjectionType } from '$PACKAGE_TYPE_DEFINITIONS';
+import { ProjectionType } from '$PACKAGE_TYPES';
 export function get(effectiveDate? : Date): ProjectionType[];
 `;
 
