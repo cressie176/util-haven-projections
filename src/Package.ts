@@ -41,12 +41,8 @@ export default class Package {
   }
 
   async build() {
+    debug(`Building package ${this.fqn}`);
     const records = await this._projection.generate();
-    this._write(records);
-  }
-
-  private _write(records: TemporalRecordType[]) {
-    debug(`Writing package ${this.fqn}`);
     this._fileSystem.initPackage(this.name, this.version, this.projectionName);
     this._writeVariant("all", records);
     this._writeVariant("current-and-future", this._getCurrentAndFutureRecords(records));
