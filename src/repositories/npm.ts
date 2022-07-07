@@ -1,6 +1,6 @@
 import Debug from "debug";
 import { exec } from "node:child_process";
-import Package from "./Package";
+import Package from "../Package";
 
 const debug = Debug("haven:projections:npm");
 
