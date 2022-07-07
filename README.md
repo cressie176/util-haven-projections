@@ -121,7 +121,7 @@ const parkOpeningDates = projection.get();
 
 // Get future park opening dates
 const nextSeason = new Date("2023-01-01");
-const parkOpeningDates = projection.get(nextSeason);
+const futureParkOpeningDates = projection.get(nextSeason);
 ```
 
 ### Adding Data Sources
