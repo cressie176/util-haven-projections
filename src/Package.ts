@@ -57,11 +57,10 @@ export default class Package {
     const startDate = records
       .map(({ effectiveDate }) => effectiveDate)
       .reduce((winner, candidate) => {
-        if (!winner) return candidate;
-        if (candidate > winner && candidate <= now) return candidate;
-        if (candidate < winner && candidate >= now) return candidate;
+        if (winner >= now) return candidate;
         return winner;
       });
+
     return records.filter(({ effectiveDate }) => effectiveDate >= startDate);
   }
 
