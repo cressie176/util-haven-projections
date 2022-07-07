@@ -14,6 +14,7 @@ program.parse().opts();
 const { dryRun, scope, prefix } = program.opts();
 
 const parksDataSource = new ParksDataSource();
+
 const projections = [new ParksProjection(parksDataSource), new ParkOpeningDatesProjection(parksDataSource)];
 
 (async () => {

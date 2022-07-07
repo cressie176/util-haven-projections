@@ -1,12 +1,12 @@
 import { AnySchema } from "yup";
 
-export type DataSourceType = {
-  fetch(): Promise<TemporalRecordType[]>;
+export type DataSourceType<T> = {
+  fetch(): Promise<TemporalRecordType<T>[]>;
 };
 
-export type TemporalRecordType = {
+export type TemporalRecordType<T> = {
   effectiveDate: Date;
-  data: Array<any>;
+  data: Array<T>;
 };
 
 export type SchemasEntryType = {

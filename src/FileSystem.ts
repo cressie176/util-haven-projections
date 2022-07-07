@@ -79,7 +79,7 @@ export default class FileSystem implements FileSystemType {
     fs.copyFileSync(path.join(this._baseDir, ".npmrc"), path.join(packageDir, ".npmrc"));
   }
 
-  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[], script: string, typedef: string) {
+  writeVariant(packageName: string, variantName: string, records: TemporalRecordType<any>[], script: string, typedef: string) {
     debug(`Writing variant: ${variantName}`);
     const variantDir = this._variantDir(packageName, variantName);
 

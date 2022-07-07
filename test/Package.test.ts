@@ -77,7 +77,7 @@ export default describe("Package", () => {
   });
 });
 
-const STAFF_DATA: TemporalRecordType[] = [
+const STAFF_DATA: TemporalRecordType<any>[] = [
   {
     effectiveDate: new Date("2022-01-01T00:00:00Z"),
     data: [

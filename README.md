@@ -173,9 +173,10 @@ A data source fetches the raw data we want to project. To add a data source...
 1. Add the data source in a file called `index.ts`. At the moment only a LocalDataSource is provided. This will fetch the JSON files from the same directory.
 
    ```ts
-   import LocalDataSource, { LocalDataSourceOptionsType } from "../../src/datasources/LocalDataSource";
+   import { ParkType } from "./index.d";
+   import LocalDataSource, { LocalDataSourceOptionsType } from "../../src/datasources /LocalDataSource";
 
-   export default class ParksDataSource extends LocalDataSource {
+   export default class ParksDataSource extends LocalDataSource<ParkType> {
      constructor(options?: LocalDataSourceOptionsType) {
        super("parks", options);
      }
@@ -221,7 +222,7 @@ mkdir projections/park-opening-dates
    import { DataSourceType } from "../../src";
 
    export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
-     constructor(dataSource: DataSourceType, options?: ProjectionOptionsType) {
+     constructor(dataSource: DataSourceType<SourceType>, options?: ProjectionOptionsType) {
        super("park-opening-dates", "1.0.0", dataSource, options);
      }
 

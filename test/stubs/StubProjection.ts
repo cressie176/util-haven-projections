@@ -11,7 +11,7 @@ type ProjectionType = {
 };
 
 export default class StubProjection extends Projection<SourceType, ProjectionType> {
-  constructor(version: string, dataSource: DataSourceType, fileSystem: FileSystemType) {
+  constructor(version: string, dataSource: DataSourceType<any>, fileSystem: FileSystemType) {
     super("staff-full-names", version, dataSource, { fileSystem });
   }
 

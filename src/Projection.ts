@@ -24,11 +24,11 @@ export type ProjectionOptionsType = {
 export default abstract class Projection<SourceType, ProjectionType> {
   private _name: string;
   private _version: string;
-  private _source: DataSourceType;
+  private _source: DataSourceType<SourceType>;
 
   private _schemas: SchemasEntryType[];
 
-  constructor(name: string, version: string, source: DataSourceType, options: ProjectionOptionsType = {}) {
+  constructor(name: string, version: string, source: DataSourceType<SourceType>, options: ProjectionOptionsType = {}) {
     this._name = name;
     this._version = version;
     this._source = source;
@@ -44,7 +44,7 @@ export default abstract class Projection<SourceType, ProjectionType> {
     return this._version;
   }
 
-  async generate(): Promise<TemporalRecordType[]> {
+  async generate(): Promise<TemporalRecordType<ProjectionType>[]> {
     debug(`Generating projection: ${this._name}@${this._version}`);
     const sourceRecords = await this._source.fetch();
     const projectedRecords = sourceRecords.map(({ effectiveDate, data }) => {
@@ -65,17 +65,17 @@ export default abstract class Projection<SourceType, ProjectionType> {
     return this._version;
   }
 
-  private _validate(records: TemporalRecordType[]) {
+  private _validate(records: TemporalRecordType<ProjectionType>[]) {
     debug(`Validating projection: ${this._name}@${this._version}`);
     this._validateEnvelope(records);
     this._validateData(records);
   }
 
-  private _validateEnvelope(records: TemporalRecordType[]) {
+  private _validateEnvelope(records: TemporalRecordType<ProjectionType>[]) {
     ENVELOPE_SCHEMA.validateSync(records);
   }
 
-  private _validateData(records: TemporalRecordType[]) {
+  private _validateData(records: TemporalRecordType<ProjectionType>[]) {
     const schemas = this._getCompatibleSchemas();
     if (!this._hasCurrentSchema(schemas)) throw new Error(`Projection ${this.name}@${this.version} has no current schema`);
 

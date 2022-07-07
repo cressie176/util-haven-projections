@@ -14,7 +14,7 @@ type PackageOptionsType = {
 export default class Package {
   private _scope: string;
   private _name: string;
-  private _projection: any;
+  private _projection: Projection<any, any>;
   private _fileSystem: FileSystemType;
 
   constructor(projection: Projection<any, any>, options: PackageOptionsType = {}) {
@@ -50,7 +50,7 @@ export default class Package {
     this._writeVariant("current-and-future", this._getCurrentAndFutureRecords(records));
   }
 
-  private _getCurrentAndFutureRecords(records: TemporalRecordType[]) {
+  private _getCurrentAndFutureRecords(records: TemporalRecordType<any>[]) {
     const now = new Date();
     const startDate = records
       .map(({ effectiveDate }) => effectiveDate)
@@ -62,7 +62,7 @@ export default class Package {
     return records.filter(({ effectiveDate }) => effectiveDate >= startDate);
   }
 
-  private _writeVariant(variantName: string, records: TemporalRecordType[]) {
+  private _writeVariant(variantName: string, records: TemporalRecordType<any>[]) {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
 const records = require('$DATA');
 module.exports = {

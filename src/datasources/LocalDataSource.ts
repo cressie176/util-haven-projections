@@ -5,7 +5,7 @@ export type LocalDataSourceOptionsType = {
   fileSystem?: FileSystemType;
 };
 
-export default class LocalDataSource implements DataSourceType {
+export default class LocalDataSource<T> implements DataSourceType<T> {
   private _name: string;
   private _fileSystem: FileSystemType;
 
@@ -14,7 +14,7 @@ export default class LocalDataSource implements DataSourceType {
     this._fileSystem = options.fileSystem || new FileSystem();
   }
 
-  async fetch(): Promise<TemporalRecordType[]> {
+  async fetch(): Promise<TemporalRecordType<T>[]> {
     return this._fileSystem.loadDataSource(this._name);
   }
 }

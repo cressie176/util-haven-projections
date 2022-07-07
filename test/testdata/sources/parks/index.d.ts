@@ -1,6 +1,6 @@
 export type SourceType = ParkType;
 
-type ParkType = {
+export type ParkType = {
   name: string;
   code: string;
   address: AddressType;
@@ -10,7 +10,7 @@ type ParkType = {
   openingDates: OpeningDatesType;
 };
 
-type AddressType = {
+export type AddressType = {
   addressLine1: string;
   addressLine2?: string;
   town: string;
@@ -18,18 +18,18 @@ type AddressType = {
   postCode: string;
 };
 
-type CoordinatesType = {
+export type CoordinatesType = {
   latitude: number;
   longitude: number;
 };
 
-type OpeningDatesType = {
+export type OpeningDatesType = {
   guests: DateRangeType[];
   owners: DateRangeType[];
   touring: DateRangeType[];
 };
 
-type DateRangeType = {
+export type DateRangeType = {
   from: string;
   to: string;
 };

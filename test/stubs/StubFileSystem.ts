@@ -1,11 +1,11 @@
 import { TemporalRecordType, SchemasEntryType, FileSystemType } from "../../src";
 
 export default class StubFileSystem implements FileSystemType {
-  private _data: TemporalRecordType[];
+  private _data: TemporalRecordType<any>[];
   private _schemas: SchemasEntryType[];
   private _packages: any = {};
 
-  constructor(data: TemporalRecordType[], schemas: SchemasEntryType[]) {
+  constructor(data: TemporalRecordType<any>[], schemas: SchemasEntryType[]) {
     this._data = data;
     this._schemas = schemas;
     this._packages = {};
@@ -15,7 +15,7 @@ export default class StubFileSystem implements FileSystemType {
     return this._packages;
   }
 
-  loadDataSource(source: string): TemporalRecordType[] {
+  loadDataSource(source: string): TemporalRecordType<any>[] {
     return this._data;
   }
 
@@ -31,7 +31,7 @@ export default class StubFileSystem implements FileSystemType {
     this._packages[packageName] = { name: packageName, version: packageVersion, variants: {} };
   }
 
-  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[], script: string, typedef: string): void {
+  writeVariant(packageName: string, variantName: string, records: TemporalRecordType<any>[], script: string, typedef: string): void {
     this._packages[packageName].variants[variantName] = { records, script, typedef };
   }
 }
