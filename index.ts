@@ -1,20 +1,20 @@
 import Debug from "debug";
-import { name, version } from "./package";
 import { program } from "commander";
+import { name, version } from "./package.json";
 import Package from "./src/Package";
 import * as npm from "./src/repositories/npm";
-import Parks from "./projections/parks";
-import ParkOpeningDates from "./projections/park-opening-dates";
+import ParksDataSource from "./sources/parks";
+import ParksProjection from "./projections/parks";
+import ParkOpeningDatesProjection from "./projections/park-opening-dates";
 
 const debug = Debug("haven:projections");
 
-program.name(name).version(version).option("--dry-run").option("--scope <type>").option("--prefix <type>");
-
-program.parse();
-
+program.name(name).version(version).option("--dry-run").option("--scope <scope>").option("--prefix <prefix>");
+program.parse().opts();
 const { dryRun, scope, prefix } = program.opts();
 
-const projections = [new Parks(), new ParkOpeningDates()];
+const parksDataSource = new ParksDataSource();
+const projections = [new ParksProjection(parksDataSource), new ParkOpeningDatesProjection(parksDataSource)];
 
 (async () => {
   for (let i = 0; i < projections.length; i++) {

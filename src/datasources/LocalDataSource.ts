@@ -1,7 +1,7 @@
 import { DataSourceType, FileSystemType, TemporalRecordType } from "..";
 import FileSystem from "../FileSystem";
 
-type LocalDataSourceOptionsType = {
+export type LocalDataSourceOptionsType = {
   fileSystem?: FileSystemType;
 };
 

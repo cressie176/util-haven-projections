@@ -1,3 +1,7 @@
-import LocalDataSource from "../../src/datasources/LocalDataSource";
+import LocalDataSource, { LocalDataSourceOptionsType } from "../../src/datasources/LocalDataSource";
 
-export default new LocalDataSource("parks");
+export default class ParksDataSource extends LocalDataSource {
+  constructor(options?: LocalDataSourceOptionsType) {
+    super("parks", options);
+  }
+}

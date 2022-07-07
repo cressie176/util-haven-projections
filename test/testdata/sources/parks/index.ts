@@ -1,4 +1,7 @@
-import { FileSystemType } from "../../../../src";
-import LocalDataSource from "../../../../src/datasources/LocalDataSource";
+import LocalDataSource, { LocalDataSourceOptionsType } from "../../../../src/datasources/LocalDataSource";
 
-export default (fileSystem: FileSystemType) => new LocalDataSource("parks", { fileSystem });
+export default class ParksDataSource extends LocalDataSource {
+  constructor(options?: LocalDataSourceOptionsType) {
+    super("parks", options);
+  }
+}

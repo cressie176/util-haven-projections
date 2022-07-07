@@ -5,6 +5,7 @@ import { describe, it, before, after } from "zunit";
 import Package from "../src/Package";
 import FileSystem from "../src/FileSystem";
 import ParkOpeningDates from "./testdata/projections/park-opening-dates";
+import ParksDataSource from "./testdata/sources/parks";
 
 const cwd = path.join(__dirname, "testdata");
 
@@ -15,7 +16,8 @@ export default describe("End to End", () => {
     fs.rmSync(path.join(cwd, "dist"), { recursive: true, force: true });
 
     const fileSystem = new FileSystem(cwd);
-    const projection = new ParkOpeningDates({ fileSystem });
+    const dataSource = new ParksDataSource({ fileSystem });
+    const projection = new ParkOpeningDates(dataSource, { fileSystem });
     const pkg = new Package(projection, { scope: "@cressie176", prefix: "data", fileSystem });
 
     await pkg.build();
