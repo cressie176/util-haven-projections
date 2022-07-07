@@ -3,8 +3,8 @@
   "description": "A proof of concept for managing shared reference data",
   "version": "1.0.0",
   "scripts": {
-    "publish:dry-run": "ts-node index -- --dry-run",
-    "publish": "ts-node index",
+    "publish:dry-run": "npm run publish -- --dry-run",
+    "publish": "ts-node index --scope @haven --prefix data",
     "prepare": "husky install",
     "test": "ts-node test/index"
   },
@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/semver": "^7.3.10",
+    "commander": "^9.3.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
