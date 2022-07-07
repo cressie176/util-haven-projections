@@ -173,18 +173,16 @@ A data source fetches the raw data we want to project. To add a data source...
 1. Add the data source in a file called `index.ts`. At the moment only a LocalDataSource is provided. This will fetch the JSON files from the same directory.
    ```ts
    import LocalDataSource from "../../src/datasources/LocalDataSource";
+   export default new LocalDataSource("parks");
    ```
-
-export default new LocalDataSource("parks");
-
-````
 
 ### Adding Projections
 
 1. Create a folder within `projections`. The name must confirm to [npm's package name rules](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#name). e.g.
+
 ```sh
 mkdir projections/park-opening-dates
-````
+```
 
 1. Add TypeScript definitions in `index.d.ts`, You **must** export a type called `ProjectionType` e.g.
 
