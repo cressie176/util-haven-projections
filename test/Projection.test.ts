@@ -3,7 +3,6 @@ import { describe, it } from "zunit";
 import { object, array, string } from "yup";
 import { TemporalRecordType } from "../src";
 import LocalDataSource from "../src/datasources/LocalDataSource";
-
 import StubProjection from "./stubs/StubProjection";
 import StubFileSystem from "./stubs/StubFileSystem";
 
