@@ -6,7 +6,7 @@ import FileSystem from "../src/FileSystem";
 
 const cwd = path.join(__dirname, "testdata");
 
-export default describe("Projection", () => {
+export default describe("FileSystem", () => {
   let fileSystem: FileSystem;
   let invalidations: string[] = [];
 
@@ -16,8 +16,7 @@ export default describe("Projection", () => {
   });
 
   afterEach(() => {
-    invalidations.forEach(() => {
-      const key = path.join(cwd, "dist", "packages", "data-parks", "package.json");
+    invalidations.forEach((key) => {
       delete require.cache[key];
     });
   });
@@ -48,22 +47,19 @@ export default describe("Projection", () => {
     const before = new Date();
     fileSystem.initPackage("data-parks", "1.0.0", "parks");
 
-    const baseDir = fs.statSync(path.join(cwd, "dist", "packages", "data-parks"));
+    const baseDir = statPackageFile();
     eq(baseDir.isDirectory(), true);
 
     const created = baseDir.ctime;
     ok(created >= before);
 
-    const dataDir = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "data"));
-    eq(dataDir.isDirectory(), true);
-
-    const npmrc = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", ".npmrc"));
+    const npmrc = statPackageFile(".npmrc");
     eq(npmrc.isFile(), true);
 
-    const typedefs = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "index.d.ts"));
+    const typedefs = statPackageFile("index.d.ts");
     eq(typedefs.isFile(), true);
 
-    const pkg = load(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    const pkg = requirePackageFile("package.json");
     eq(pkg.name, "data-parks");
     eq(pkg.version, "1.0.0");
   });
@@ -72,63 +68,52 @@ export default describe("Projection", () => {
     fileSystem.initPackage("data-parks", "1.0.0", "parks");
     fileSystem.initPackage("data-parks", "1.0.1", "parks");
 
-    const pkg = load(path.join(cwd, "dist", "packages", "data-parks", "package.json"));
+    const pkg = requirePackageFile("package.json");
     eq(pkg.name, "data-parks");
     eq(pkg.version, "1.0.1");
   });
 
   it("should write variants", () => {
-    fileSystem.initPackage("data-parks", "1.0.0", "parks");
     const records = [
       {
         effectiveDate: new Date("2021-01-01T00:00:00Z"),
         data: [{ fullName: "John Wayne" }],
       },
-      {
-        effectiveDate: new Date("2020-01-01T00:00:00Z"),
-        data: [{ fullName: "Marrion Robert Morrison" }],
-      },
     ];
-    fileSystem.writeVariant("data-parks", "all", records);
+    const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nconst records = require('$DATA');`;
+    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nimport { ProjectionType } from '$PACKAGE_TYPES';`;
 
-    const projection = load(path.join(cwd, "dist", "packages", "data-parks", "all"));
-    const data = projection.get();
-
-    eq(data.length, 1);
-    eq(data[0].fullName, "John Wayne");
-  });
-
-  it("should honour effective dates", () => {
     fileSystem.initPackage("data-parks", "1.0.0", "parks");
-    const records = [
-      {
-        effectiveDate: new Date("2021-01-01T00:00:00Z"),
-        data: [{ fullName: "John Wayne" }],
-      },
-      {
-        effectiveDate: new Date("2020-01-01T00:00:00Z"),
-        data: [{ fullName: "Marrion Robert Morrison" }],
-      },
-    ];
-    fileSystem.writeVariant("data-parks", "all", records);
+    fileSystem.writeVariant("data-parks", "all", records, script, typedef);
 
-    const projection = load(path.join(cwd, "dist", "packages", "data-parks", "all"));
-    const data = projection.get(new Date("2020-06-01T00:00:00Z"));
+    const packageData = requirePackageFile("all", "data.json");
+    eq(packageData.length, 1);
+    eq(packageData[0].effectiveDate, "2021-01-01T00:00:00.000Z");
 
-    eq(data.length, 1);
-    eq(data[0].fullName, "Marrion Robert Morrison");
+    const packageScript = readPackageFile("all", "index.js");
+    match(packageScript, /require\('\.\/data\.json'\)/m);
+
+    const packageTypeDef = readPackageFile("all", "index.d.ts");
+    match(packageTypeDef, /from '\.\.\/index.d'/m);
   });
 
-  it("should write variant type definitions", () => {
-    fileSystem.initPackage("data-parks", "1.0.0", "parks");
-    fileSystem.writeVariant("data-parks", "all", []);
+  function requirePackageFile(...paths: string[]) {
+    const fullPath = getPackagePath(...paths);
+    invalidations.push(fullPath);
+    return require(fullPath);
+  }
 
-    const typedefs = fs.statSync(path.join(cwd, "dist", "packages", "data-parks", "all.d.ts"));
-    eq(typedefs.isFile(), true);
-  });
+  function statPackageFile(...paths: string[]) {
+    const fullPath = getPackagePath(...paths);
+    return fs.statSync(fullPath);
+  }
 
-  function load(p: string) {
-    invalidations.push(p);
-    return require(p);
+  function readPackageFile(...paths: string[]) {
+    const fullPath = getPackagePath(...paths);
+    return fs.readFileSync(fullPath, "utf-8");
+  }
+
+  function getPackagePath(...paths: string[]) {
+    return path.join(cwd, "dist", "packages", "data-parks", ...paths);
   }
 });

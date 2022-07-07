@@ -1,17 +1,9 @@
 import Debug from "debug";
 import fs from "fs";
 import path from "path";
-import { TemporalRecordType, SchemasEntryType } from ".";
+import { TemporalRecordType, SchemasEntryType, FileSystemType } from ".";
 
 const debug = Debug("haven:projections:FileSystem");
-
-export type FileSystemType = {
-  loadDataSource(sourceName: string): TemporalRecordType[];
-  loadSchemas(projectionName: string): SchemasEntryType[];
-  getPackageDir(packageName: string): string;
-  initPackage(packageName: string, packageVersion: string, projectionName: string): void;
-  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[]): void;
-};
 
 export default class FileSystem implements FileSystemType {
   private _baseDir: string;
@@ -72,53 +64,25 @@ export default class FileSystem implements FileSystemType {
 
     debug(`Creating directory structure below ${packageDir}`);
     fs.mkdirSync(packageDir, { recursive: true });
-    fs.mkdirSync(path.join(packageDir, "data"));
 
-    debug(`Writing package.json`);
+    debug("Writing package.json");
     writeJson(path.join(packageDir, "package.json"), { name: packageName, version: packageVersion });
 
-    debug(`Copying type index.d.ts`);
+    debug("Copying index.d.ts");
     fs.copyFileSync(path.join(projectionDir, "index.d.ts"), path.join(packageDir, "index.d.ts"));
 
-    debug(`Copying .npmrc`);
+    debug("Copying .npmrc");
     fs.copyFileSync(path.join(this._baseDir, ".npmrc"), path.join(packageDir, ".npmrc"));
   }
 
-  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[]) {
+  writeVariant(packageName: string, variantName: string, records: TemporalRecordType[], script: string, typedef: string) {
     debug(`Writing variant: ${variantName}`);
-    this._writeVariantRecords(packageName, variantName, records);
-    this._writeVariantScript(packageName, variantName);
-    this._writeVariantTypeDefintions(packageName, variantName);
-  }
+    const variantDir = this._variantDir(packageName, variantName);
 
-  _writeVariantRecords(packageName: string, variantName: string, records: TemporalRecordType[]) {
-    const variantDataPath = this._variantDataPath(packageName, variantName);
-    writeJson(variantDataPath, records);
-  }
-
-  _writeVariantScript(packageName: string, variantName: string) {
-    const variantDataPath = this._variantDataPath(packageName, variantName);
-    const requirePath = path.relative(this._packageDir(packageName), variantDataPath);
-    const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-const records = require('.${path.sep}${requirePath}');
-module.exports = {
-  get(effectiveDate = Date.now()) {
-    const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
-    return record ? record.data : null;
-  }
-}`;
-
-    writeFile(this._packageDir(packageName, `${variantName}.js`), script);
-  }
-
-  _writeVariantTypeDefintions(packageName: string, variantName: string) {
-    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-import { ProjectionType } from './types';
-export function get(effectiveDate? : Date): ProjectionType[];
-`;
-
-    const variantTypesPath = this._packageDir(packageName, `${variantName}.d.ts`);
-    writeFile(variantTypesPath, typedef);
+    fs.mkdirSync(variantDir);
+    writeJson(path.join(variantDir, "data.json"), records);
+    writeFile(path.join(variantDir, "index.js"), script.replace("$DATA", "./data.json"));
+    writeFile(path.join(variantDir, "index.d.ts"), typedef.replace("$PACKAGE_TYPES", "../index.d"));
   }
 
   _sourceDir(name: string, ...paths: string[]) {
@@ -133,8 +97,8 @@ export function get(effectiveDate? : Date): ProjectionType[];
     return path.join(this._baseDir, "dist", "packages", name, ...paths);
   }
 
-  _variantDataPath(packageName: string, variantName: string) {
-    return this._packageDir(packageName, "data", `${variantName}.json`);
+  _variantDir(packageName: string, variantName: string, ...paths: string[]) {
+    return this._packageDir(packageName, variantName, ...paths);
   }
 }
 

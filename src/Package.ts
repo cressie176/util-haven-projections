@@ -1,7 +1,7 @@
 import Debug from "debug";
-import { TemporalRecordType } from ".";
+import { FileSystemType, TemporalRecordType } from ".";
 import Projection from "./Projection";
-import FileSystem, { FileSystemType } from "./FileSystem";
+import FileSystem from "./FileSystem";
 
 const debug = Debug("haven:projections:Package");
 
@@ -48,8 +48,8 @@ export default class Package {
   private _write(records: TemporalRecordType[]) {
     debug(`Writing package ${this.fqn}`);
     this._fileSystem.initPackage(this.name, this.version, this.projectionName);
-    this._fileSystem.writeVariant(this.name, "all", records);
-    this._fileSystem.writeVariant(this.name, "currentAndFuture", this._getCurrentAndFutureRecords(records));
+    this._writeVariant("all", records);
+    this._writeVariant("current-and-future", this._getCurrentAndFutureRecords(records));
   }
 
   private _getCurrentAndFutureRecords(records: TemporalRecordType[]) {
@@ -63,5 +63,23 @@ export default class Package {
         return winner;
       });
     return records.filter(({ effectiveDate }) => effectiveDate >= startDate);
+  }
+
+  private _writeVariant(variantName: string, records: TemporalRecordType[]) {
+    const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
+const records = require('$DATA');
+module.exports = {
+  get(effectiveDate = Date.now()) {
+    const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
+    return record ? record.data : null;
+  }
+}`;
+
+    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
+import { ProjectionType } from '$PACKAGE_TYPE_DEFINITIONS';
+export function get(effectiveDate? : Date): ProjectionType[];
+`;
+
+    this._fileSystem.writeVariant(this.name, variantName, records, script, typedef);
   }
 }

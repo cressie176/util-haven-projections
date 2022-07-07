@@ -1,5 +1,5 @@
-import { DataSourceType, TemporalRecordType } from "..";
-import FileSystem, { FileSystemType } from "../FileSystem";
+import { DataSourceType, FileSystemType, TemporalRecordType } from "..";
+import FileSystem from "../FileSystem";
 
 type LocalDataSourceOptionsType = {
   fileSystem?: FileSystemType;

@@ -14,7 +14,9 @@
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "outDir": "dist/ts"
   },
-  "include": ["src/**/*", "test/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["test/testdata/dist/**/*"]
 }

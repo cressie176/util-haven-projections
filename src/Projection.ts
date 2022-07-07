@@ -1,8 +1,8 @@
 import Debug from "debug";
 import semver from "semver";
 import { object, date, array } from "yup";
-import { DataSourceType, TemporalRecordType, SchemasEntryType } from ".";
-import FileSystem, { FileSystemType } from "./FileSystem";
+import { DataSourceType, TemporalRecordType, SchemasEntryType, FileSystemType } from ".";
+import FileSystem from "./FileSystem";
 
 const debug = Debug("haven:projections:Projection");
 

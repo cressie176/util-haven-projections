@@ -1,15 +1,17 @@
 import { strictEqual as eq, rejects } from "assert";
 import { describe, it } from "zunit";
 import { object, array, string } from "yup";
-import { FileSystemType } from "../src/FileSystem";
-import Projection from "../src/Projection";
-import { TemporalRecordType, SchemasEntryType } from "../src";
-import LiteralDataSource from "../src/datasources/LiteralDataSource";
+import { TemporalRecordType } from "../src";
+import LocalDataSource from "../src/datasources/LocalDataSource";
+
+import StubProjection from "./stubs/StubProjection";
+import StubFileSystem from "./stubs/StubFileSystem";
 
 export default describe("Projection", () => {
   it("should generate temporal records", async () => {
-    const fileSystem = new StubFileSystem(STAFF_DATA, SCHEMAS, TYPES);
-    const projection = new TestProjection({ fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, SCHEMAS);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("1.0.0", dataSource, fileSystem);
     const records = await projection.generate();
     eq(records.length, 2);
     eq(records[0].data.length, 2);
@@ -27,8 +29,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("1.0.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -46,8 +49,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("1.0.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -69,8 +73,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "1.0.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("1.0.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -88,8 +93,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.1.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.1.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -107,8 +113,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.1.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.1.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -126,8 +133,9 @@ export default describe("Projection", () => {
         schema: array().test(() => false),
       },
     ];
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.0.1", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.0.1", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -154,8 +162,9 @@ export default describe("Projection", () => {
       },
     ];
 
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "2.0.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("2.0.0", dataSource, fileSystem);
 
     await projection.generate();
   });
@@ -184,8 +193,9 @@ export default describe("Projection", () => {
       },
     ];
 
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.2.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.2.0", dataSource, fileSystem);
 
     await projection.generate();
   });
@@ -206,8 +216,9 @@ export default describe("Projection", () => {
       },
     ];
 
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.0.2", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.0.2", dataSource, fileSystem);
 
     await projection.generate();
   });
@@ -224,8 +235,9 @@ export default describe("Projection", () => {
       },
     ];
 
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "2.1.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("2.1.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -248,8 +260,9 @@ export default describe("Projection", () => {
       },
     ];
 
-    const fileSystem = new StubFileSystem(STAFF_DATA, schemas, TYPES);
-    const projection = new TestProjection({ version: "0.2.0", fileSystem });
+    const fileSystem = new StubFileSystem(STAFF_DATA, schemas);
+    const dataSource = new LocalDataSource("staff", { fileSystem });
+    const projection = new StubProjection("0.2.0", dataSource, fileSystem);
 
     await rejects(
       () => projection.generate(),
@@ -260,59 +273,6 @@ export default describe("Projection", () => {
     );
   });
 });
-
-type TestProjectionOptionsType = {
-  version?: string;
-  fileSystem: FileSystemType;
-};
-
-class TestProjection extends Projection<SourceType, ProjectionType> {
-  constructor({ version = "1.0.0", fileSystem }: TestProjectionOptionsType) {
-    super("staff-full-names", version, staffDataSource, { fileSystem });
-  }
-  _build(people: SourceType[]): ProjectionType[] {
-    return people.map((person) => {
-      const fullName = person.givenNames.concat(person.surname).join(" ");
-      return { fullName };
-    });
-  }
-}
-
-type SourceType = {
-  givenNames: string[];
-  surname: string;
-};
-
-type ProjectionType = {
-  fullName: string;
-};
-
-class StubFileSystem implements FileSystemType {
-  private _data: TemporalRecordType[];
-  private _types: string;
-  private _schemas: SchemasEntryType[];
-
-  constructor(data: TemporalRecordType[], schemas: SchemasEntryType[], types: string) {
-    this._data = data;
-    this._schemas = schemas;
-    this._types = types;
-  }
-  loadDataSource(source: string): TemporalRecordType[] {
-    return this._data;
-  }
-  loadSchemas(projection: string): SchemasEntryType[] {
-    return this._schemas;
-  }
-  getPackageDir(packageName: string): string {
-    throw new Error("Method not implemented.");
-  }
-  initPackage(packageName: string, packageVersion: string, projectionName: string): void {
-    throw new Error("Method not implemented.");
-  }
-  writeVariant(packageName: string, variantName: string, recors: TemporalRecordType[]): void {
-    throw new Error("Method not implemented.");
-  }
-}
 
 const STAFF_DATA: TemporalRecordType[] = [
   {
@@ -355,7 +315,3 @@ const SCHEMAS = [
     ),
   },
 ];
-
-const TYPES = "type foo = string";
-
-const staffDataSource = new LiteralDataSource("staff", STAFF_DATA);
