@@ -12,7 +12,7 @@ const projections = [new Parks(), new ParkOpeningDates()];
 (async () => {
   for (let i = 0; i < projections.length; i++) {
     const projection = projections[i];
-    const pkg = new Package(projection);
+    const pkg = new Package(projection, { scope: "@cressie176", prefix: "data" });
     const isPublished = await npm.isPublished(pkg);
     if (isPublished) {
       debug(`Package ${pkg.fqn} has already been published - skipping`);

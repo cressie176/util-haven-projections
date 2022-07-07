@@ -16,7 +16,7 @@ export default describe("End to End", () => {
 
     const fileSystem = new FileSystem(cwd);
     const projection = new ParkOpeningDates({ fileSystem });
-    const pkg = new Package(projection, { fileSystem });
+    const pkg = new Package(projection, { scope: "@cressie176", prefix: "data", fileSystem });
 
     await pkg.build();
   });
@@ -116,6 +116,6 @@ export default describe("End to End", () => {
   }
 
   function getPackagePath(...paths: string[]) {
-    return path.join(cwd, "dist", "packages", "data-park-opening-dates", ...paths);
+    return path.join(cwd, "dist", "packages", "@cressie176/data-park-opening-dates", ...paths);
   }
 });

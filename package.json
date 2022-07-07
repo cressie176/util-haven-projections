@@ -1,4 +1,7 @@
 {
+  "name": "haven-projections",
+  "description": "A proof of concept for managing shared reference data",
+  "version": "1.0.0",
   "scripts": {
     "publish:dry-run": "ts-node index -- --dry-run",
     "publish": "ts-node index",
@@ -22,5 +25,19 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cressie176/util-haven-projections.git"
+  },
+  "author": "Steve Cresswell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cressie176/util-haven-projections/issues"
+  },
+  "homepage": "https://github.com/cressie176/util-haven-projections#readme",
+  "main": "index.js"
 }

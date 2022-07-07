@@ -6,20 +6,22 @@ import FileSystem from "./FileSystem";
 const debug = Debug("haven:projections:Package");
 
 type PackageOptionsType = {
+  scope?: string;
+  prefix?: string;
   fileSystem?: FileSystemType;
 };
 
 export default class Package {
+  private _scope: string;
   private _name: string;
   private _projection: any;
   private _fileSystem: FileSystemType;
 
   constructor(projection: Projection<any, any>, options: PackageOptionsType = {}) {
-    this._name = `data-${projection.name}`;
+    this._name = [options.scope ? `${options.scope}/` : "", options.prefix ? `${options.prefix}-` : "", projection.name].join("");
     this._projection = projection;
     this._fileSystem = options.fileSystem || new FileSystem();
   }
-
   get name() {
     return this._name;
   }
@@ -29,7 +31,7 @@ export default class Package {
   }
 
   get fqn() {
-    return `${this._name}@${this.version}`;
+    return `@${this._scope}/{this._name}@${this.version}`;
   }
 
   get projectionName() {

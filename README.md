@@ -312,7 +312,6 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 
 ## TODO
 
-- Support package scopes
 - Validate package name
 - A github action to publish packages
 - Prevent large projections (and allow an override)
