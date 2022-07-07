@@ -1,2 +1,2 @@
 dist/*
-testdata/dist/*
+test/testdata/dist/*
