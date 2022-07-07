@@ -5,7 +5,7 @@ import { ProjectionType } from "./index.d";
 
 export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
   constructor(options?: ProjectionOptionsType) {
-    super("park-opening-dates", "1.0.0", parkDataSource, options);
+    super("park-opening-dates", "1.0.0", parkDataSource(options.fileSystem), options);
   }
 
   _build(parks: SourceType[]): ProjectionType[] {

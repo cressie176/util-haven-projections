@@ -1,6 +1,6 @@
 import Debug from "debug";
-const { name, version } = require("./package");
-const { program } = require("commander");
+import { name, version } from "./package";
+import { program } from "commander";
 import Package from "./src/Package";
 import * as npm from "./src/repositories/npm";
 import Parks from "./projections/parks";

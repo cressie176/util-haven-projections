@@ -1,3 +1,4 @@
+import { FileSystemType } from "../../../../src";
 import LocalDataSource from "../../../../src/datasources/LocalDataSource";
 
-export default new LocalDataSource("parks");
+export default (fileSystem: FileSystemType) => new LocalDataSource("parks", { fileSystem });

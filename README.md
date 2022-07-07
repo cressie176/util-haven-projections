@@ -90,7 +90,7 @@ Our applications must be tested locally, and therefore any solution sould work w
                   └───────────────────────────────────┘           └───────────────────────────────────┘
 ```
 
-The solution adopted by this project is to store source data in a GitHub repository as time seried JSON documents, and to generate a set of projections which are published as npm packages. The projections and packages are semantically versioned, and validated using [yup](https://www.npmjs.com/package/yup) schemas. The packages also include the projection's TypeScript definitions. To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
+The solution adopted by this project is to store source data in a GitHub repository as time series JSON documents, and to generate a set of projections which are published as npm packages. The projections and packages are semantically versioned, and validated using [yup](https://www.npmjs.com/package/yup) schemas. The packages also include the projection's TypeScript definitions. To minimise client bundle sizes, each package contains two variations of its projections, 'all' which includes all records, and 'currrent-and-future' which excludes historic ones.
 
 ### Pros
 
