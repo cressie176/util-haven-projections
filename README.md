@@ -215,27 +215,24 @@ mkdir projections/park-opening-dates
    import parkDataSource from "../../sources/parks";
    import { SourceType } from "../../sources/parks/index.d";
    import { ProjectionType } from "./index.d";
+   export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
+     constructor(options?: ProjectionOptionsType) {
+       super("park-opening-dates", "1.0.0", parkDataSource, options);
+     }
+
+     _build(parks: SourceType[]): ProjectionType[] {
+       return parks.map(({ code, openingDates }) => {
+         return { code, openingDates };
+       });
+     }
+   }
    ```
 
-export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
-constructor() {
-super("park-opening-dates", "1.0.0", parkDataSource);
-}
-
-    _build(parks: SourceType[]): ProjectionType[] {
-      return parks.map(({ code, openingDates }) => {
-        return { code, openingDates };
-      });
-    }
-
-}
-
-````
-
 1. Create a subfolder called `schemas` for the yup schemas. e.g.
-```sh
-mkdir projections/park-opening-dates/schemas
-````
+
+   ```sh
+   mkdir projections/park-opening-dates/schemas
+   ```
 
 1. Add a [yup](https://www.npmjs.com/package/yup) schema to the schemas directory. The filename (excluding the extension) must match the projection version, e.g. `1.0.0.ts`
 

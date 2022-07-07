@@ -1,11 +1,11 @@
-import Projection from "../../../../src/Projection";
+import Projection, { ProjectionOptionsType } from "../../../../src/Projection";
 import parkDataSource from "../../sources/parks";
 import { SourceType } from "../../sources/parks/index.d";
 import { ProjectionType } from "./index.d";
 
 export default class ParkOpeningDates extends Projection<SourceType, ProjectionType> {
-  constructor() {
-    super("park-opening-dates", "1.0.0", parkDataSource);
+  constructor(options?: ProjectionOptionsType) {
+    super("park-opening-dates", "1.0.0", parkDataSource, options);
   }
 
   _build(parks: SourceType[]): ProjectionType[] {

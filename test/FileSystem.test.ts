@@ -34,18 +34,19 @@ export default describe("FileSystem", () => {
   });
 
   it("should load schemas", () => {
-    const schemas = fileSystem.loadSchemas("parks");
-    eq(schemas.length, 1);
+    const schemas = fileSystem.loadSchemas("park-opening-dates");
+    eq(schemas.length, 2);
     eq(schemas[0].version, "1.0.0");
+    eq(schemas[1].version, "1.0.1");
   });
 
   it("should get package directory", () => {
-    eq(fileSystem.getPackageDir("data-parks"), path.join(cwd, "dist", "packages", "data-parks"));
+    eq(fileSystem.getPackageDir("data-park-opening-dates"), path.join(cwd, "dist", "packages", "data-park-opening-dates"));
   });
 
   it("should initialise a new package", () => {
     const before = new Date();
-    fileSystem.initPackage("data-parks", "1.0.0", "parks");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
 
     const baseDir = statPackageFile();
     eq(baseDir.isDirectory(), true);
@@ -60,16 +61,16 @@ export default describe("FileSystem", () => {
     eq(typedefs.isFile(), true);
 
     const pkg = requirePackageFile("package.json");
-    eq(pkg.name, "data-parks");
+    eq(pkg.name, "data-park-opening-dates");
     eq(pkg.version, "1.0.0");
   });
 
   it("should replace existing packages", () => {
-    fileSystem.initPackage("data-parks", "1.0.0", "parks");
-    fileSystem.initPackage("data-parks", "1.0.1", "parks");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.1", "park-opening-dates");
 
     const pkg = requirePackageFile("package.json");
-    eq(pkg.name, "data-parks");
+    eq(pkg.name, "data-park-opening-dates");
     eq(pkg.version, "1.0.1");
   });
 
@@ -83,8 +84,8 @@ export default describe("FileSystem", () => {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nconst records = require('$DATA');`;
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nimport { ProjectionType } from '$PACKAGE_TYPES';`;
 
-    fileSystem.initPackage("data-parks", "1.0.0", "parks");
-    fileSystem.writeVariant("data-parks", "all", records, script, typedef);
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
+    fileSystem.writeVariant("data-park-opening-dates", "all", records, script, typedef);
 
     const packageData = requirePackageFile("all", "data.json");
     eq(packageData.length, 1);
@@ -114,6 +115,6 @@ export default describe("FileSystem", () => {
   }
 
   function getPackagePath(...paths: string[]) {
-    return path.join(cwd, "dist", "packages", "data-parks", ...paths);
+    return path.join(cwd, "dist", "packages", "data-park-opening-dates", ...paths);
   }
 });

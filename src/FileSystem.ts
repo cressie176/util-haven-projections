@@ -1,6 +1,7 @@
 import Debug from "debug";
 import fs from "fs";
 import path from "path";
+import semver from "semver";
 import { TemporalRecordType, SchemasEntryType, FileSystemType } from ".";
 
 const debug = Debug("haven:projections:FileSystem");
@@ -43,6 +44,9 @@ export default class FileSystem implements FileSystemType {
       .readdirSync(schemasDir)
       .map((filename) => {
         return path.basename(filename, path.extname(filename));
+      })
+      .sort((a, b) => {
+        return semver.compare(a, b);
       })
       .map((version) => {
         const fullPath = path.join(schemasDir, version);
