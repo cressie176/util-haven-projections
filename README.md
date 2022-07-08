@@ -81,7 +81,7 @@ Our applications must be tested locally, and therefore any solution sould work w
                   │                                   │           │                                   │
                   │         Type Definitions          │           │              Schema               │
                   │                                   │           │                                   │
-                  │     Both the Data Source and      │           │     A projection must have an     │
+                  │     Both the Data Source and      │           │       A projection must have      │
                   │ Projections require a set of type │           │ accompanying yup schemas for each │
                   │            definitions            │           │     major and minor release.      │
                   │                                   │           │                                   │
