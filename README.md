@@ -48,7 +48,7 @@ When reference data changes, the previous values may still be required for histo
 
 ### Evolution
 
-Both reference data, and our understanding of our domain evolves over time. We will at some point need to make backwards incompatible changes to our reference data, and will need to do so without breaking client applications. This suggests a versioning and validation mechanism.
+Both reference data, and our understanding of our domain evolves over time. We will at some point need to make backwards incompatible changes to our reference data, and will need to do so without breaking client applications. This suggests a versioning and validation mechanism. The issue of temporality compounds the challenge of evolution, since we may need to retrospecively add data to historic records. In some cases this data will not be known (e.g. in what year did Devon Cliffs become dog friendly?). However, in most cases the accuracy of hisotic data is unlikely to be important for anything other than reports, and the likelihood of running very old reports low.
 
 ### Local Testing
 
@@ -110,6 +110,7 @@ The solution adopted by this project is to store source data in a GitHub reposit
 
 - Updates must be made manually by engineers for each consumer
 - Effective dates are only practical at root document level
+- May have to retrospectively add data to historic data sets. In some cases the data will not be available.
 
 ## Usage
 
