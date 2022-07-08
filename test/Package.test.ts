@@ -18,11 +18,11 @@ export default describe("Package", () => {
     eq(fileSystem.packages["staff-full-names"].name, "staff-full-names");
     eq(fileSystem.packages["staff-full-names"].version, "1.0.0");
     eq(fileSystem.packages["staff-full-names"].variants["all"].records.length, 2);
-    match(fileSystem.packages["staff-full-names"].variants["all"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["staff-full-names"].variants["all"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["staff-full-names"].variants["all"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["staff-full-names"].variants["all"].typedef, /from "\$PACKAGE_TYPES"/m);
     eq(fileSystem.packages["staff-full-names"].variants["current-and-future"].records.length, 1);
-    match(fileSystem.packages["staff-full-names"].variants["current-and-future"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["staff-full-names"].variants["current-and-future"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["staff-full-names"].variants["current-and-future"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["staff-full-names"].variants["current-and-future"].typedef, /from "\$PACKAGE_TYPES"/m);
   });
 
   it("should build the package with a scope", async () => {
@@ -35,11 +35,11 @@ export default describe("Package", () => {
     eq(fileSystem.packages["@cressie176/staff-full-names"].name, "@cressie176/staff-full-names");
     eq(fileSystem.packages["@cressie176/staff-full-names"].version, "1.0.0");
     eq(fileSystem.packages["@cressie176/staff-full-names"].variants["all"].records.length, 2);
-    match(fileSystem.packages["@cressie176/staff-full-names"].variants["all"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["@cressie176/staff-full-names"].variants["all"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["@cressie176/staff-full-names"].variants["all"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["@cressie176/staff-full-names"].variants["all"].typedef, /from "\$PACKAGE_TYPES"/m);
     eq(fileSystem.packages["@cressie176/staff-full-names"].variants["current-and-future"].records.length, 1);
-    match(fileSystem.packages["@cressie176/staff-full-names"].variants["current-and-future"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["@cressie176/staff-full-names"].variants["current-and-future"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["@cressie176/staff-full-names"].variants["current-and-future"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["@cressie176/staff-full-names"].variants["current-and-future"].typedef, /from "\$PACKAGE_TYPES"/m);
   });
 
   it("should build the package with a prefix", async () => {
@@ -52,11 +52,11 @@ export default describe("Package", () => {
     eq(fileSystem.packages["data-staff-full-names"].name, "data-staff-full-names");
     eq(fileSystem.packages["data-staff-full-names"].version, "1.0.0");
     eq(fileSystem.packages["data-staff-full-names"].variants["all"].records.length, 2);
-    match(fileSystem.packages["data-staff-full-names"].variants["all"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["data-staff-full-names"].variants["all"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["data-staff-full-names"].variants["all"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["data-staff-full-names"].variants["all"].typedef, /from "\$PACKAGE_TYPES"/m);
     eq(fileSystem.packages["data-staff-full-names"].variants["current-and-future"].records.length, 1);
-    match(fileSystem.packages["data-staff-full-names"].variants["current-and-future"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["data-staff-full-names"].variants["current-and-future"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["data-staff-full-names"].variants["current-and-future"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["data-staff-full-names"].variants["current-and-future"].typedef, /from "\$PACKAGE_TYPES"/m);
   });
 
   it("should build the package with both a scope and a prefix", async () => {
@@ -69,11 +69,11 @@ export default describe("Package", () => {
     eq(fileSystem.packages["@cressie176/data-staff-full-names"].name, "@cressie176/data-staff-full-names");
     eq(fileSystem.packages["@cressie176/data-staff-full-names"].version, "1.0.0");
     eq(fileSystem.packages["@cressie176/data-staff-full-names"].variants["all"].records.length, 2);
-    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["all"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["all"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["all"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["all"].typedef, /from "\$PACKAGE_TYPES"/m);
     eq(fileSystem.packages["@cressie176/data-staff-full-names"].variants["current-and-future"].records.length, 1);
-    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["current-and-future"].script, /require\('\$DATA'\)/m);
-    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["current-and-future"].typedef, /from '\$PACKAGE_TYPES'/m);
+    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["current-and-future"].script, /require\("\$DATA"\)/m);
+    match(fileSystem.packages["@cressie176/data-staff-full-names"].variants["current-and-future"].typedef, /from "\$PACKAGE_TYPES"/m);
   });
 });
 

@@ -64,16 +64,17 @@ export default class Package {
 
   private _writeVariant(variantName: string, records: TemporalRecordType<any>[]) {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-const records = require('$DATA');
+const { name, version } = require("../package.json");    
+const records = require("$DATA");
 module.exports = {
   get(effectiveDate = Date.now()) {
     const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
-    return record ? record.data : null;
+    return Object.assign({ name, version, variant: "${variantName}", effectiveDate: null, data: [] }, record);
   }
 }`;
 
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-import { ProjectionType } from '$PACKAGE_TYPES';
+import { ProjectionType } from "$PACKAGE_TYPES";
 export function get(effectiveDate? : Date): ProjectionType[];
 `;
 

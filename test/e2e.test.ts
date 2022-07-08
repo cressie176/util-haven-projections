@@ -29,86 +29,116 @@ export default describe("End to End", () => {
     });
   });
 
-  it("should get current data from all variant", async () => {
-    const temporalData = requirePackageFile("all");
-    const parkOpeningDates = temporalData.get();
+  it("should get current temporal record from all variant", async () => {
+    const projection = requirePackageFile("all");
+    const temporalRecord = projection.get();
 
-    eq(parkOpeningDates.length, 2);
+    eq(temporalRecord.effectiveDate, new Date() >= new Date("2022-12-01T00:00:00.000Z") ? "2022-12-01T00:00:00.000Z" : "2021-12-01T00:00:00.000Z");
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "all");
 
-    eq(parkOpeningDates[0].code, "DC");
-    eq(parkOpeningDates[0].openingDates.guests[0].from, "2022-03-11");
-    eq(parkOpeningDates[0].openingDates.guests[0].to, "2022-11-07");
-
-    eq(parkOpeningDates[1].code, "SX");
-    eq(parkOpeningDates[1].openingDates.guests[0].from, "2022-03-11");
-    eq(parkOpeningDates[1].openingDates.guests[0].to, "2022-11-07");
+    eq(temporalRecord.data.length, 2);
+    eq(temporalRecord.data[0].code, "DC");
+    eq(temporalRecord.data[0].openingDates.guests[0].from, "2022-03-11");
+    eq(temporalRecord.data[0].openingDates.guests[0].to, "2022-11-07");
+    eq(temporalRecord.data[1].code, "SX");
+    eq(temporalRecord.data[1].openingDates.guests[0].from, "2022-03-11");
+    eq(temporalRecord.data[1].openingDates.guests[0].to, "2022-11-07");
   });
 
-  it("should get historic data from all variant", async () => {
-    const temporalData = requirePackageFile("all");
-    const parkOpeningDates = temporalData.get(new Date("2021-01-01"));
+  it("should get historic temporal record from all variant", async () => {
+    const projection = requirePackageFile("all");
+    const temporalRecord = projection.get(new Date("2021-01-01"));
 
-    eq(parkOpeningDates.length, 2);
+    eq(temporalRecord.effectiveDate, "2020-12-01T00:00:00.000Z");
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "all");
 
-    eq(parkOpeningDates[0].code, "DC");
-    eq(parkOpeningDates[0].openingDates.guests[0].from, "2021-03-11");
-    eq(parkOpeningDates[0].openingDates.guests[0].to, "2021-11-07");
+    eq(temporalRecord.data.length, 2);
+    eq(temporalRecord.data[0].code, "DC");
+    eq(temporalRecord.data[0].openingDates.guests[0].from, "2021-03-11");
+    eq(temporalRecord.data[0].openingDates.guests[0].to, "2021-11-07");
+    eq(temporalRecord.data[1].code, "SX");
+    eq(temporalRecord.data[1].openingDates.guests[0].from, "2021-03-11");
+    eq(temporalRecord.data[1].openingDates.guests[0].to, "2021-11-07");
+  });
 
-    eq(parkOpeningDates[1].code, "SX");
-    eq(parkOpeningDates[1].openingDates.guests[0].from, "2021-03-11");
-    eq(parkOpeningDates[1].openingDates.guests[0].to, "2021-11-07");
+  it("should not get pre-historic data from all variant", async () => {
+    const projection = requirePackageFile("all");
+    const temporalRecord = projection.get(new Date("2019-01-01"));
+
+    eq(temporalRecord.effectiveDate, null);
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "all");
+    eq(temporalRecord.data.length, 0);
   });
 
   it("should get future data from all variant", async () => {
-    const temporalData = requirePackageFile("all");
-    const parkOpeningDates = temporalData.get(new Date("2023-01-01"));
+    const projection = requirePackageFile("all");
+    const temporalRecord = projection.get(new Date("2023-01-01"));
 
-    eq(parkOpeningDates.length, 2);
+    eq(temporalRecord.effectiveDate, "2022-12-01T00:00:00.000Z");
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "all");
 
-    eq(parkOpeningDates[0].code, "DC");
-    eq(parkOpeningDates[0].openingDates.guests[0].from, "2023-03-11");
-    eq(parkOpeningDates[0].openingDates.guests[0].to, "2023-11-07");
-
-    eq(parkOpeningDates[1].code, "SX");
-    eq(parkOpeningDates[1].openingDates.guests[0].from, "2023-03-11");
-    eq(parkOpeningDates[1].openingDates.guests[0].to, "2023-11-07");
+    eq(temporalRecord.data.length, 2);
+    eq(temporalRecord.data[0].code, "DC");
+    eq(temporalRecord.data[0].openingDates.guests[0].from, "2023-03-11");
+    eq(temporalRecord.data[0].openingDates.guests[0].to, "2023-11-07");
+    eq(temporalRecord.data[1].code, "SX");
+    eq(temporalRecord.data[1].openingDates.guests[0].from, "2023-03-11");
+    eq(temporalRecord.data[1].openingDates.guests[0].to, "2023-11-07");
   });
 
   it("should get current data from current-and-future variant", async () => {
-    const temporalData = requirePackageFile("current-and-future");
-    const parkOpeningDates = temporalData.get();
+    const projection = requirePackageFile("current-and-future");
+    const temporalRecord = projection.get();
 
-    eq(parkOpeningDates.length, 2);
+    eq(temporalRecord.effectiveDate, new Date() >= new Date("2022-12-01T00:00:00.000Z") ? "2022-12-01T00:00:00.000Z" : "2021-12-01T00:00:00.000Z");
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "current-and-future");
 
-    eq(parkOpeningDates[0].code, "DC");
-    eq(parkOpeningDates[0].openingDates.guests[0].from, "2022-03-11");
-    eq(parkOpeningDates[0].openingDates.guests[0].to, "2022-11-07");
-
-    eq(parkOpeningDates[1].code, "SX");
-    eq(parkOpeningDates[1].openingDates.guests[0].from, "2022-03-11");
-    eq(parkOpeningDates[1].openingDates.guests[0].to, "2022-11-07");
+    eq(temporalRecord.data.length, 2);
+    eq(temporalRecord.data[0].code, "DC");
+    eq(temporalRecord.data[0].openingDates.guests[0].from, "2022-03-11");
+    eq(temporalRecord.data[0].openingDates.guests[0].to, "2022-11-07");
+    eq(temporalRecord.data[1].code, "SX");
+    eq(temporalRecord.data[1].openingDates.guests[0].from, "2022-03-11");
+    eq(temporalRecord.data[1].openingDates.guests[0].to, "2022-11-07");
   });
 
-  it("should not get historic data from all variant", async () => {
-    const temporalData = requirePackageFile("current-and-future");
-    const parkOpeningDates = temporalData.get(new Date("2021-01-01"));
+  it("should not get historic data from current-and-future variant", async () => {
+    const projection = requirePackageFile("current-and-future");
+    const temporalRecord = projection.get(new Date("2021-01-01"));
 
-    eq(parkOpeningDates, null);
+    eq(temporalRecord.effectiveDate, null);
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "current-and-future");
+    eq(temporalRecord.data.length, 0);
   });
 
-  it("should get future data from all variant", async () => {
-    const temporalData = requirePackageFile("current-and-future");
-    const parkOpeningDates = temporalData.get(new Date("2023-01-01"));
+  it("should get future data from current-and-future variant", async () => {
+    const projection = requirePackageFile("current-and-future");
+    const temporalRecord = projection.get(new Date("2023-01-01"));
 
-    eq(parkOpeningDates.length, 2);
+    eq(temporalRecord.effectiveDate, "2022-12-01T00:00:00.000Z");
+    eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
+    eq(temporalRecord.version, "1.0.0");
+    eq(temporalRecord.variant, "current-and-future");
 
-    eq(parkOpeningDates[0].code, "DC");
-    eq(parkOpeningDates[0].openingDates.guests[0].from, "2023-03-11");
-    eq(parkOpeningDates[0].openingDates.guests[0].to, "2023-11-07");
-
-    eq(parkOpeningDates[1].code, "SX");
-    eq(parkOpeningDates[1].openingDates.guests[0].from, "2023-03-11");
-    eq(parkOpeningDates[1].openingDates.guests[0].to, "2023-11-07");
+    eq(temporalRecord.data.length, 2);
+    eq(temporalRecord.data[0].code, "DC");
+    eq(temporalRecord.data[0].openingDates.guests[0].from, "2023-03-11");
+    eq(temporalRecord.data[0].openingDates.guests[0].to, "2023-11-07");
+    eq(temporalRecord.data[1].code, "SX");
+    eq(temporalRecord.data[1].openingDates.guests[0].from, "2023-03-11");
+    eq(temporalRecord.data[1].openingDates.guests[0].to, "2023-11-07");
   });
 
   function requirePackageFile(...paths: string[]) {

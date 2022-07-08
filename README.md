@@ -118,7 +118,7 @@ The solution adopted by this project is to store source data in a GitHub reposit
 import projection from "data-park-opening-dates/current-and-future";
 
 // Get the current park opening dates
-const parkOpeningDates = projection.get();
+const { data: parkOpeningDates } = projection.get();
 
 // Get future park opening dates
 const nextSeason = new Date("2023-01-01");
@@ -318,7 +318,6 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 
 ## TODO
 
-- Wrap module responses in an envelope including metadata (such as a data set id that clients can use to request the same data set again later). The metadata could also include things like paging information (number of records), a checksum useful for eTags, exact module version, last modified date, max age hints, or future effective dates.
 - Validate package name
 - A github action to publish packages
 - Prevent large projections (and allow an override)
