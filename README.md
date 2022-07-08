@@ -317,7 +317,7 @@ We wanted a low barrier to entry. If the approach proves useful and managing the
 
 ## TODO
 
-- Wrap module responses in an envelope including metadata (such as a data set id that clients can use to request the same data set again later). The metadata could also include things like paging information (number of records), max age hints, or future effective dates.
+- Wrap module responses in an envelope including metadata (such as a data set id that clients can use to request the same data set again later). The metadata could also include things like paging information (number of records), a checksum useful for eTags, max age hints, or future effective dates.
 - Validate package name
 - A github action to publish packages
 - Prevent large projections (and allow an override)
