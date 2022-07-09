@@ -71,6 +71,7 @@ export type ProjectedRecordType = {
   version: string,
   variant: string,
   effectiveDate: Date | null;
+  nextEffectiveDate: Date | null;
   data: Array<ProjectionType>;
 };
 
@@ -82,12 +83,26 @@ $PROJECTION_TYPES
 
   private _writeVariant(variantName: string, records: TemporalRecordType<any>[]) {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
-const { name, version } = require("../package.json");    
+const { name, version } = require("../package.json");
 const records = require("$DATA");
+
 module.exports = {
-  get(effectiveDate = Date.now()) {
-    const record = records.find((candidate) => new Date(candidate.effectiveDate) <= effectiveDate);
-    return Object.assign({ name, version, variant: "${variantName}", effectiveDate: null, data: [] }, record);
+  get(date = Date.now()) {    
+    const result = { name, version, variant: "${variantName}", effectiveDate: null, nextEffectiveDate: null, data: [] };
+    const record = records.find(({ effectiveDate }) => new Date(effectiveDate) <= date);
+    if (!record) {
+      const nextEffectiveDate = records[records.length-1] ? new Date(records[records.length-1].effectiveDate) : null;
+      Object.assign(result, { nextEffectiveDate });
+    } else {
+      const effectiveDate = record.effectiveDate ? new Date(record.effectiveDate) : null;
+      const nextEffectiveDate =
+        records
+          .map(({ effectiveDate }) => new Date(effectiveDate))
+          .sort((a, b) => a - b)
+          .find((effectiveDate) => !record || effectiveDate > new Date(record.effectiveDate)) || null;
+      Object.assign(result, { effectiveDate, nextEffectiveDate, data: record.data });
+    }
+    return result;
   }
 }`;
 

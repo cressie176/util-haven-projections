@@ -30,13 +30,26 @@ export default describe("End to End", () => {
   });
 
   it("should get current temporal record from all variant", async () => {
+    const now = new Date();
+    const { effectiveDate, nextEffectiveDate } =
+      now >= new Date("2022-12-01T00:00:00.000Z")
+        ? {
+            effectiveDate: "2022-12-01T00:00:00.000Z",
+            nextEffectiveDate: null,
+          }
+        : {
+            effectiveDate: "2021-12-01T00:00:00.000Z",
+            nextEffectiveDate: "2022-12-01T00:00:00.000Z",
+          };
+
     const projection = requirePackageFile("all");
     const temporalRecord = projection.get();
 
-    eq(temporalRecord.effectiveDate, new Date() >= new Date("2022-12-01T00:00:00.000Z") ? "2022-12-01T00:00:00.000Z" : "2021-12-01T00:00:00.000Z");
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "all");
+    eq(temporalRecord.effectiveDate.toISOString(), effectiveDate);
+    eq(temporalRecord.nextEffectiveDate.toISOString(), nextEffectiveDate);
 
     eq(temporalRecord.data.length, 2);
     eq(temporalRecord.data[0].code, "DC");
@@ -51,10 +64,11 @@ export default describe("End to End", () => {
     const projection = requirePackageFile("all");
     const temporalRecord = projection.get(new Date("2021-01-01"));
 
-    eq(temporalRecord.effectiveDate, "2020-12-01T00:00:00.000Z");
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "all");
+    eq(temporalRecord.effectiveDate.toISOString(), "2020-12-01T00:00:00.000Z");
+    eq(temporalRecord.nextEffectiveDate.toISOString(), "2021-12-01T00:00:00.000Z");
 
     eq(temporalRecord.data.length, 2);
     eq(temporalRecord.data[0].code, "DC");
@@ -69,10 +83,11 @@ export default describe("End to End", () => {
     const projection = requirePackageFile("all");
     const temporalRecord = projection.get(new Date("2019-01-01"));
 
-    eq(temporalRecord.effectiveDate, null);
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "all");
+    eq(temporalRecord.effectiveDate, null);
+    eq(temporalRecord.nextEffectiveDate.toISOString(), "2020-12-01T00:00:00.000Z");
     eq(temporalRecord.data.length, 0);
   });
 
@@ -80,10 +95,11 @@ export default describe("End to End", () => {
     const projection = requirePackageFile("all");
     const temporalRecord = projection.get(new Date("2023-01-01"));
 
-    eq(temporalRecord.effectiveDate, "2022-12-01T00:00:00.000Z");
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "all");
+    eq(temporalRecord.effectiveDate.toISOString(), "2022-12-01T00:00:00.000Z");
+    eq(temporalRecord.nextEffectiveDate, null);
 
     eq(temporalRecord.data.length, 2);
     eq(temporalRecord.data[0].code, "DC");
@@ -95,13 +111,26 @@ export default describe("End to End", () => {
   });
 
   it("should get current data from current-and-future variant", async () => {
+    const now = new Date();
+    const { effectiveDate, nextEffectiveDate } =
+      now >= new Date("2022-12-01T00:00:00.000Z")
+        ? {
+            effectiveDate: "2022-12-01T00:00:00.000Z",
+            nextEffectiveDate: null,
+          }
+        : {
+            effectiveDate: "2021-12-01T00:00:00.000Z",
+            nextEffectiveDate: "2022-12-01T00:00:00.000Z",
+          };
+
     const projection = requirePackageFile("current-and-future");
     const temporalRecord = projection.get();
 
-    eq(temporalRecord.effectiveDate, new Date() >= new Date("2022-12-01T00:00:00.000Z") ? "2022-12-01T00:00:00.000Z" : "2021-12-01T00:00:00.000Z");
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "current-and-future");
+    eq(temporalRecord.effectiveDate.toISOString(), effectiveDate);
+    eq(temporalRecord.nextEffectiveDate.toISOString(), nextEffectiveDate);
 
     eq(temporalRecord.data.length, 2);
     eq(temporalRecord.data[0].code, "DC");
@@ -116,10 +145,11 @@ export default describe("End to End", () => {
     const projection = requirePackageFile("current-and-future");
     const temporalRecord = projection.get(new Date("2021-01-01"));
 
-    eq(temporalRecord.effectiveDate, null);
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "current-and-future");
+    eq(temporalRecord.effectiveDate, null);
+    eq(temporalRecord.nextEffectiveDate.toISOString(), "2021-12-01T00:00:00.000Z");
     eq(temporalRecord.data.length, 0);
   });
 
@@ -127,10 +157,11 @@ export default describe("End to End", () => {
     const projection = requirePackageFile("current-and-future");
     const temporalRecord = projection.get(new Date("2023-01-01"));
 
-    eq(temporalRecord.effectiveDate, "2022-12-01T00:00:00.000Z");
     eq(temporalRecord.name, "@cressie176/data-park-opening-dates");
     eq(temporalRecord.version, "1.0.0");
     eq(temporalRecord.variant, "current-and-future");
+    eq(temporalRecord.effectiveDate.toISOString(), "2022-12-01T00:00:00.000Z");
+    eq(temporalRecord.nextEffectiveDate, null);
 
     eq(temporalRecord.data.length, 2);
     eq(temporalRecord.data[0].code, "DC");
