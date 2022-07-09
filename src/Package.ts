@@ -104,7 +104,8 @@ module.exports = {
     }
     return result;
   }
-}`;
+}
+`;
 
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
 import { ProjectionType } from "$PACKAGE_TYPES";
