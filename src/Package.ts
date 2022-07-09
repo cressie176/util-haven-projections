@@ -109,7 +109,7 @@ module.exports = {
 
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
 import { ProjectionType } from "$PACKAGE_TYPES";
-export function get(effectiveDate? : Date): ProjectedRecordType;
+export function get(date? : Date): ProjectedRecordType;
 `;
 
     this._fileSystem.writeVariant(this.name, variantName, records, script, typedef);
