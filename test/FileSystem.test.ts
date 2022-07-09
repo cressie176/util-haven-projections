@@ -46,7 +46,7 @@ export default describe("FileSystem", () => {
 
   it("should initialise a new package", () => {
     const before = new Date();
-    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0");
 
     const baseDir = statPackageFile();
     eq(baseDir.isDirectory(), true);
@@ -57,21 +57,27 @@ export default describe("FileSystem", () => {
     const npmrc = statPackageFile(".npmrc");
     eq(npmrc.isFile(), true);
 
-    const typedefs = statPackageFile("index.d.ts");
-    eq(typedefs.isFile(), true);
-
     const pkg = requirePackageFile("package.json");
     eq(pkg.name, "data-park-opening-dates");
     eq(pkg.version, "1.0.0");
   });
 
   it("should replace existing packages", () => {
-    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
-    fileSystem.initPackage("data-park-opening-dates", "1.0.1", "park-opening-dates");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.1");
 
     const pkg = requirePackageFile("package.json");
     eq(pkg.name, "data-park-opening-dates");
     eq(pkg.version, "1.0.1");
+  });
+
+  it("should write package types", () => {
+    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\n$PROJECTION_TYPES`;
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0");
+    fileSystem.writePackageTypes("data-park-opening-dates", "park-opening-dates", typedef);
+
+    const packageScript = readPackageFile("index.d.ts");
+    match(packageScript, /export type ProjectionType = ParkOpeningDatesType;/m);
   });
 
   it("should write variants", () => {
@@ -84,7 +90,7 @@ export default describe("FileSystem", () => {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nconst records = require('$DATA');`;
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!\nimport { ProjectionType } from '$PACKAGE_TYPES';`;
 
-    fileSystem.initPackage("data-park-opening-dates", "1.0.0", "park-opening-dates");
+    fileSystem.initPackage("data-park-opening-dates", "1.0.0");
     fileSystem.writeVariant("data-park-opening-dates", "all", records, script, typedef);
 
     const packageData = requirePackageFile("all", "data.json");

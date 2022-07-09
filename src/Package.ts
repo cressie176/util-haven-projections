@@ -45,7 +45,8 @@ export default class Package {
   async build() {
     debug(`Building package ${this.fqn}`);
     const records = await this._projection.generate();
-    this._fileSystem.initPackage(this.name, this.version, this.projectionName);
+    this._fileSystem.initPackage(this.name, this.version);
+    this._writePackageTypes();
     this._writeVariant("all", records);
     this._writeVariant("current-and-future", this._getCurrentAndFutureRecords(records));
   }
@@ -62,6 +63,23 @@ export default class Package {
     return records.filter(({ effectiveDate }) => effectiveDate >= startDate);
   }
 
+  private _writePackageTypes() {
+    const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
+    
+export type ProjectedRecordType = {
+  name: string,
+  version: string,
+  variant: string,
+  effectiveDate: Date | null;
+  data: Array<ProjectionType>;
+};
+
+$PROJECTION_TYPES
+`;
+
+    this._fileSystem.writePackageTypes(this.name, this.projectionName, typedef);
+  }
+
   private _writeVariant(variantName: string, records: TemporalRecordType<any>[]) {
     const script = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
 const { name, version } = require("../package.json");    
@@ -75,15 +93,6 @@ module.exports = {
 
     const typedef = `// !!! THIS FILE IS GENERATED. DO NOT EDIT !!!
 import { ProjectionType } from "$PACKAGE_TYPES";
-
-export type ProjectedRecordType = {
-  name: string,
-  version: string,
-  variant: string,
-  effectiveDate: Date | null;
-  data: Array<ProjectionType>;
-};
-
 export function get(effectiveDate? : Date): ProjectedRecordType;
 `;
 

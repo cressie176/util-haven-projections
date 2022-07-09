@@ -296,6 +296,8 @@ Whenever you want to update a projection you must update the projection version 
 
 You must add a **completely new** [yup](https://www.npmjs.com/package/yup) schema for both `minor` and `major` releases. Do not edit or reuse/import existing schemas otherwise you may unwittingly hide breaking changes.
 
+If you need to release a new major version but need retain the ability make patch or minor updates to the previous version, follow the steps for [adding a new projection](#adding-projections), using the suffixes of `-v${major}` and `V${major}` for the folder and class names. e.g. `park-opening-dates-v2` and `ParkOpeningDatesV2`, but keep the original package name.
+
 ## Local Testing
 
 If you want to test packages locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. After which you can run `npm run publish` to publish any packages to the private registry, from where you can install them.

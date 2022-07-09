@@ -25,7 +25,7 @@ export default class FileSystem implements FileSystemType {
       })
       .map((filename) => {
         const fullPath = path.join(dataSourceDir, filename);
-        const contents = fs.readFileSync(fullPath, "utf-8");
+        const contents = readFile(fullPath);
         const temporalData = JSON.parse(contents);
         return {
           ...temporalData,
@@ -59,8 +59,7 @@ export default class FileSystem implements FileSystemType {
     return this._packageDir(packageName);
   }
 
-  initPackage(packageName: string, packageVersion: string, projectionName: string) {
-    const projectionDir = this._projectionDir(projectionName);
+  initPackage(packageName: string, packageVersion: string) {
     const packageDir = this._packageDir(packageName);
 
     debug(`Removing ${packageDir}`);
@@ -72,11 +71,19 @@ export default class FileSystem implements FileSystemType {
     debug("Writing package.json");
     writeJson(path.join(packageDir, "package.json"), { name: packageName, version: packageVersion });
 
-    debug("Copying index.d.ts");
-    fs.copyFileSync(path.join(projectionDir, "index.d.ts"), path.join(packageDir, "index.d.ts"));
-
     debug("Copying .npmrc");
     fs.copyFileSync(path.join(this._baseDir, ".npmrc"), path.join(packageDir, ".npmrc"));
+  }
+
+  writePackageTypes(packageName: string, projectionName: string, typedef: string) {
+    const packageDir = this._packageDir(packageName);
+    const projectionDir = this._projectionDir(projectionName);
+
+    const projectionTypeDefs = readFile(path.join(projectionDir, "index.d.ts"));
+
+    debug(`Writing index.d.ts`);
+    const content = typedef.replace("$PROJECTION_TYPES", projectionTypeDefs);
+    writeFile(path.join(packageDir, "index.d.ts"), content);
   }
 
   writeVariant(packageName: string, variantName: string, records: TemporalRecordType<any>[], script: string, typedef: string) {
@@ -113,4 +120,8 @@ function writeJson(fullPath: string, document: any) {
 
 function writeFile(fullPath: string, contents: string) {
   fs.writeFileSync(fullPath, contents, "utf-8");
+}
+
+function readFile(fullPath: string) {
+  return fs.readFileSync(fullPath, "utf-8");
 }

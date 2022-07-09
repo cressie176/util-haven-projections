@@ -27,8 +27,12 @@ export default class StubFileSystem implements FileSystemType {
     throw new Error("Method not implemented.");
   }
 
-  initPackage(packageName: string, packageVersion: string, projectionName: string): void {
+  initPackage(packageName: string, packageVersion: string): void {
     this._packages[packageName] = { name: packageName, version: packageVersion, variants: {} };
+  }
+
+  writePackageTypes(packageName: string, projectionName: string, typedef: string): void {
+    this._packages[packageName].typedef = typedef;
   }
 
   writeVariant(packageName: string, variantName: string, records: TemporalRecordType<any>[], script: string, typedef: string): void {
