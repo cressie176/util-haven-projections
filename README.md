@@ -300,9 +300,12 @@ If you need to release a new major version but need retain the ability make patc
 
 ## Local Testing
 
-If you want to test packages locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. After which you can run `npm run publish` to publish any packages to the private registry, from where you can install them.
+If you want to test packages locally before publishing them the easiest way is to install a private npm registry such as [verdaccio](https://verdaccio.org/) and temporarily update the `.npmrc` files. After which you can run `npm run publish` to publish any packages to the private registry, from where you can install them. You will need to run `npm login` in order to publish packages.
 
-You will need to run `npm login` in order to publish packages to vedaccio
+```
+npm i -g vedaccio
+npm login --registry http://localhost:4873/
+```
 
 ## F.A.Q.
 
