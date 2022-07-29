@@ -19,8 +19,8 @@
           ],
           "covidRestrictions": [
             {
-              "_from": "2021-06-01",
-              "_omit": true
+              "_omit": true,
+              "_from": "2021-06-01"
             },
             {
               "_value": true
