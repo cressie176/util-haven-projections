@@ -4,7 +4,7 @@ export default {
   data: [
     [
       entity({
-        name: [value("Devon Clifs")],
+        name: [value("Devon Cliffs", "2021-01-01"), value("Devon Hills")],
         code: [value("DC")],
         covidRestrictions: [omit("2021-06-01"), value(true)],
         address: [
