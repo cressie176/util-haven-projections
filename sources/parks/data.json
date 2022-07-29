@@ -40,10 +40,7 @@
                     }
                   ],
                   "touring": [
-                    {
-                      "_omit": true,
-                      "from": "2024-12-01"
-                    },
+                    { "_omit": true, "_from": "2024-12-01" },
                     {
                       "_entity": {
                         "start": [{ "_value": "2022-03-11" }],
@@ -73,10 +70,7 @@
                     }
                   ],
                   "touring": [
-                    {
-                      "_omit": true,
-                      "from": "2024-12-01"
-                    },
+                    { "_omit": true, "_from": "2024-12-01" },
                     {
                       "_entity": {
                         "start": [{ "_value": "2023-03-11" }],
