@@ -3,86 +3,30 @@
     [
       {
         "_entity": {
-          "name": [
-            {
-              "_value": "Devon Cliffs",
-              "_from": "2021-01-01"
-            },
-            {
-              "_value": "Devon Hills"
-            }
-          ],
-          "code": [
-            {
-              "_value": "DC"
-            }
-          ],
-          "covidRestrictions": [
-            {
-              "_omit": true,
-              "_from": "2021-06-01"
-            },
-            {
-              "_value": true
-            }
-          ],
+          "name": [{ "_value": "Devon Cliffs", "_from": "2021-01-01" }, { "_value": "Devon Hills" }],
+          "code": [{ "_value": "DC" }],
+          "covidRestrictions": [{ "_omit": true, "_from": "2021-06-01" }, { "_value": true }],
           "address": [
             {
               "_entity": {
-                "addressLine1": [
-                  {
-                    "_value": "Devon Cliffs Holiday Park"
-                  }
-                ],
-                "addressLine2": [
-                  {
-                    "_value": "Devon Cliffs Holiday Park"
-                  }
-                ],
-                "town": [
-                  {
-                    "_value": "Exmouth"
-                  }
-                ],
-                "county": [
-                  {
-                    "_value": "Devon"
-                  }
-                ],
-                "postcode": [
-                  {
-                    "_value": "EX8 5BT"
-                  }
-                ]
+                "addressLine1": [{ "_value": "Devon Cliffs Holiday Park" }],
+                "addressLine2": [{ "_value": "Devon Cliffs Holiday Park" }],
+                "town": [{ "_value": "Exmouth" }],
+                "county": [{ "_value": "Devon" }],
+                "postcode": [{ "_value": "EX8 5BT" }]
               }
             }
           ],
-          "telephone": [
-            {
-              "_value": "01395226226"
-            }
-          ],
+          "telephone": [{ "_value": "01395226226" }],
           "coordinates": [
             {
               "_entity": {
-                "latitude": [
-                  {
-                    "_value": 50.615
-                  }
-                ],
-                "longitude": [
-                  {
-                    "_value": 3.3666
-                  }
-                ]
+                "latitude": [{ "_value": 50.615 }],
+                "longitude": [{ "_value": 3.3666 }]
               }
             }
           ],
-          "dogFriendly": [
-            {
-              "_value": true
-            }
-          ],
+          "dogFriendly": [{ "_value": true }],
           "season": [
             [
               {
@@ -90,48 +34,28 @@
                   "guests": [
                     {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2022-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2022-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2022-03-11" }],
+                        "end": [{ "_value": "2022-11-07" }]
                       }
                     }
                   ],
                   "touring": [
                     {
+                      "_omit": true,
+                      "from": "2024-12-01"
+                    },
+                    {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2022-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2022-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2022-03-11" }],
+                        "end": [{ "_value": "2022-11-07" }]
                       }
                     }
                   ],
                   "owners": [
                     {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2022-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2022-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2022-03-11" }],
+                        "end": [{ "_value": "2022-11-07" }]
                       }
                     }
                   ]
@@ -143,48 +67,28 @@
                   "guests": [
                     {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2023-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2023-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2023-03-11" }],
+                        "end": [{ "_value": "2023-11-07" }]
                       }
                     }
                   ],
                   "touring": [
                     {
+                      "_omit": true,
+                      "from": "2024-12-01"
+                    },
+                    {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2023-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2023-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2023-03-11" }],
+                        "end": [{ "_value": "2023-11-07" }]
                       }
                     }
                   ],
                   "owners": [
                     {
                       "_entity": {
-                        "start": [
-                          {
-                            "_value": "2023-03-11"
-                          }
-                        ],
-                        "end": [
-                          {
-                            "_value": "2023-11-07"
-                          }
-                        ]
+                        "start": [{ "_value": "2023-03-11" }],
+                        "end": [{ "_value": "2023-11-07" }]
                       }
                     }
                   ]

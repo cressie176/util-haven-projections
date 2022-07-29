@@ -34,6 +34,7 @@ export default {
                 }),
               ],
               touring: [
+                omit("24-12-01"),
                 entity({
                   start: [value("2022-03-11")],
                   end: [value("2022-11-07")],
