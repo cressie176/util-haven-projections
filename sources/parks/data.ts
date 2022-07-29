@@ -10,7 +10,7 @@ export default {
         address: [
           entity({
             addressLine1: [value("Devon Cliffs Holiday Park")],
-            addressLine2: [value("Devon Cliffs Holiday Park")],
+            addressLine2: [value("Sandy Bay")],
             town: [value("Exmouth")],
             county: [value("Devon")],
             postcode: [value("EX8 5BT")],
