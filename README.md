@@ -315,14 +315,12 @@ We did. A [sister project](https://github.com/cressie176/service-haven-projectio
 
 ### Why not GraphQL?
 
-There is a some overlap between the challenges described above and the goals of [GraphQL](https://graphql.org/), and indeed other API technologies such as [OData](https://docs.microsoft.com/en-us/odata/). Why then should we not use it?
-
-GraphQL would allow clients to create projections of the source data dynamically through queries, which would keep the size of the projections to a minimum, it does not solve several of the other problems and creates new ones, e.g.
+There is a some overlap between the challenges described above and the goals of [GraphQL](https://graphql.org/), and indeed other API technologies such as [OData](https://docs.microsoft.com/en-us/odata/). Why then should we not use it? GraphQL would allow clients to create projections of the source data dynamically through queries, which would keep the size of the projections to a minimum, it does not solve several of the other problems and creates new ones, e.g.
 
 - There is no traceability over which client is using what data
 - There is no support for version management
 - Clients can only access data via network requests, introducing risk of latency and timeout issues
-- GraphQL queries quickly become hard to understand, and this logic would be baked into several clients
+- GraphQL queries quickly become hard to understand, and this logic would be implemented in multiple clients
 - GraphQL APIs still need to be implemented server side
 
 Nothing in the proposed solution prevents building a GraphQL API on top of the projection approach, but since the bennefit of GraphQL is in dyanmic projections, it wouldn't add any bennefit to the simpler [RESTful API approach]((https://github.com/cressie176/service-haven-projections)).
